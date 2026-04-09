@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ONI shpk — Healthcare Information Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;500;600;700;800&family=Lora:ital,wght@0,500;0,600;1,400;1,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --w:#ffffff;
+  --ink:#0a0e1a;
+  --navy:#0d1f3c;
+  --blue:#1a47c8;
+  --blue-h:#1338a8;
+  --blue-xl:#eef2ff;
+  --blue-m:#c7d2fe;
+  --mist:#f6f7fb;
+  --g100:#eef0f5;
+  --g200:#dde1ec;
+  --g300:#b8bece;
+  --g400:#8892a8;
+  --g500:#5a6478;
+  --g600:#3d4760;
+  --rule:1px solid var(--g200);
+  --rule-strong:1.5px solid var(--ink);
+  --r:4px;
+}
+html{scroll-behavior:smooth;overflow-x:hidden;font-size:16px}
+body{
+  background:var(--w);color:var(--ink);
+  font-family:"Bricolage Grotesque",sans-serif;
+  line-height:1.6;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+a{text-decoration:none;color:inherit}
+button{font-family:"Bricolage Grotesque",sans-serif;cursor:pointer;border:none;background:none;padding:0}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:var(--blue);border-radius:2px}
+
+/* PAGES */
+.page{display:none;min-height:100vh}
+.page.active{display:block}
+
+/* ── NAV ── */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:300;
+  height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 5%;
+  background:rgba(255,255,255,.97);
+  border-bottom:var(--rule);
+  backdrop-filter:blur(20px);
+  transition:border-color .3s,box-shadow .3s;
+}
+#nav.solid{border-bottom-color:var(--g300);box-shadow:0 1px 20px rgba(10,14,26,.06)}
+.nav-logo{cursor:pointer;display:flex;align-items:center}
+.nav-logo img{height:38px;width:auto;object-fit:contain;display:block}
+.nav-links{display:flex;align-items:center;gap:0}
+.nl{
+  padding:0 14px;height:60px;
+  display:flex;align-items:center;
+  font-size:13px;font-weight:500;
+  color:var(--g500);
+  border-bottom:2px solid transparent;
+  transition:color .15s,border-color .15s;
+  white-space:nowrap;
+}
+.nl:hover{color:var(--ink)}
+.nl.cur{color:var(--blue);border-bottom-color:var(--blue)}
+.nav-r{display:flex;align-items:center;gap:10px}
+.lang-sw{display:flex;background:var(--g100);border-radius:3px;overflow:hidden;border:var(--rule)}
+.lb{padding:5px 11px;font-size:11.5px;font-weight:700;letter-spacing:.5px;color:var(--g500);transition:.15s}
+.lb.on{background:var(--ink);color:#fff}
+.nav-cta{
+  padding:8px 20px;background:var(--blue);color:#fff;
+  border-radius:3px;font-size:13px;font-weight:700;
+  letter-spacing:.2px;transition:.2s;white-space:nowrap;
+}
+.nav-cta:hover{background:var(--blue-h);transform:translateY(-1px);box-shadow:0 4px 16px rgba(26,71,200,.3)}
+.ham{display:none;padding:6px;flex-direction:column;gap:5px}
+.hb{width:20px;height:1.5px;background:var(--ink);border-radius:1px;transition:.3s}
+#mnav{
+  display:none;position:fixed;top:60px;left:0;right:0;
+  background:#fff;border-bottom:var(--rule);z-index:299;
+  flex-direction:column;padding:8px 20px 16px;
+}
+#mnav.open{display:flex}
+#mnav .mnl{padding:10px 0;font-size:15px;font-weight:500;color:var(--ink);border-bottom:var(--rule)}
+#mnav .mnl:last-of-type{border-bottom:none}
+#mnav .mf{display:flex;gap:8px;padding-top:12px}
+
+/* PW */
+.pw{padding-top:60px}
+
+/* ═══════════════════════════
+   HOME
+═══════════════════════════ */
+/* HERO */
+.hero{
+  min-height:calc(90vh - 60px);
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:0 5% 56px;
+  background:var(--navy);
+  position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 75% 50%,rgba(26,71,200,.18) 0%,transparent 70%),
+    radial-gradient(ellipse 40% 60% at 20% 80%,rgba(26,71,200,.1) 0%,transparent 60%),
+    linear-gradient(160deg,#0d1f3c 0%,#060d1a 100%);
+  z-index:0;
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:60px 60px;
+  z-index:1;
+}
+.hero-content{position:relative;z-index:2;max-width:820px}
+.hero-label{
+  font-family:"DM Mono",monospace;
+  font-size:11px;font-weight:500;letter-spacing:2px;
+  text-transform:uppercase;color:rgba(255,255,255,.4);
+  margin-bottom:28px;
+}
+.hero h1{
+  font-size:clamp(38px,5.5vw,72px);
+  font-weight:800;letter-spacing:-3px;
+  line-height:1.0;
+  color:#fff;
+  margin-bottom:24px;
+}
+.hero h1 em{
+  font-family:"Lora",serif;
+  font-style:italic;font-weight:400;
+  color:#7c9cff;letter-spacing:-2px;
+}
+.hero-p{
+  font-size:17px;color:rgba(255,255,255,.6);
+  line-height:1.75;max-width:520px;margin-bottom:40px;
+}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:64px}
+.btn-w{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:13px 28px;background:#fff;color:var(--navy);
+  border-radius:3px;font-size:14px;font-weight:700;transition:.2s;
+}
+.btn-w:hover{background:#e8ecff;transform:translateY(-1px)}
+.btn-o{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:13px 28px;background:transparent;color:rgba(255,255,255,.7);
+  border:1px solid rgba(255,255,255,.25);border-radius:3px;
+  font-size:14px;font-weight:500;transition:.2s;
+}
+.btn-o:hover{border-color:rgba(255,255,255,.5);color:#fff}
+/* STAT ROW */
+.hero-stats{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-top:1px solid rgba(255,255,255,.1);
+  position:relative;z-index:2;
+}
+.hs{padding:24px 0;border-right:1px solid rgba(255,255,255,.08)}
+.hs:last-child{border-right:none}
+.hs-n{
+  font-size:clamp(26px,3vw,40px);font-weight:800;
+  color:#fff;letter-spacing:-1.5px;line-height:1;margin-bottom:6px;
+}
+.hs-n span{color:#7c9cff}
+.hs-l{font-size:12px;color:rgba(255,255,255,.4);letter-spacing:.3px;line-height:1.4}
+/* TRUST STRIP */
+.trust{
+  padding:16px 5%;
+  background:var(--mist);border-bottom:var(--rule);
+  display:flex;align-items:center;gap:28px;flex-wrap:wrap;
+}
+.trust-lbl{
+  font-family:"DM Mono",monospace;
+  font-size:10px;font-weight:500;letter-spacing:2px;
+  text-transform:uppercase;color:var(--g400);white-space:nowrap;flex-shrink:0;
+}
+.trust-items{display:flex;gap:0;align-items:stretch;flex-wrap:wrap}
+.ti{
+  padding:4px 16px;
+  font-size:12px;font-weight:600;color:var(--g500);
+  border-left:var(--rule);white-space:nowrap;
+  display:flex;align-items:center;
+}
+.ti:first-child{border-left:none}
+
+/* NAV CARDS */
+.ncs{padding:56px 5% 80px;background:var(--w)}
+.ncs-lbl{
+  font-family:"DM Mono",monospace;
+  font-size:10px;font-weight:500;letter-spacing:2.5px;
+  text-transform:uppercase;color:var(--g400);
+  margin-bottom:32px;padding-bottom:16px;
+  border-bottom:var(--rule);
+}
+.ncg{display:grid;grid-template-columns:repeat(4,1fr);border:var(--rule)}
+.nc{
+  padding:32px 28px 28px;
+  border-right:var(--rule);
+  border-bottom:var(--rule);
+  cursor:pointer;
+  transition:background .15s;
+  position:relative;
+  background:var(--w);
+}
+.nc:nth-child(4n),.nc:nth-child(8n){border-right:none}
+.nc:nth-child(5),.nc:nth-child(6),.nc:nth-child(7),.nc:nth-child(8){border-bottom:none}
+.nc:hover{background:var(--mist)}
+.nc-num{
+  font-family:"DM Mono",monospace;
+  font-size:11px;font-weight:500;letter-spacing:1px;
+  color:var(--blue);margin-bottom:18px;
+  display:block;
+}
+.nc-t{
+  font-size:19px;font-weight:700;color:var(--ink);
+  letter-spacing:-.5px;margin-bottom:4px;line-height:1.2;
+}
+.nc-s{
+  font-size:11px;font-weight:600;letter-spacing:.5px;
+  text-transform:uppercase;color:var(--g400);margin-bottom:14px;
+}
+.nc-d{font-size:13.5px;color:var(--g500);line-height:1.6}
+.nc-arr{
+  position:absolute;bottom:24px;right:24px;
+  font-size:18px;color:var(--g300);transition:.2s;
+}
+.nc:hover .nc-arr{color:var(--blue);transform:translateX(3px)}
+.nc.feat{background:var(--navy);}
+.nc.feat .nc-num{color:#7c9cff}
+.nc.feat .nc-t{color:#fff}
+.nc.feat .nc-s{color:rgba(255,255,255,.35)}
+.nc.feat .nc-d{color:rgba(255,255,255,.55)}
+.nc.feat .nc-arr{color:rgba(255,255,255,.25)}
+.nc.feat:hover{background:#162848}
+.nc.feat:hover .nc-arr{color:#7c9cff}
+
+/* ═══════════════════════════
+   INNER PAGES — SHARED
+═══════════════════════════ */
+.ph{
+  padding:52px 5% 48px;
+  border-bottom:var(--rule);
+  background:var(--w);
+}
+.bc{
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:22px;
+  font-family:"DM Mono",monospace;
+  font-size:11px;font-weight:500;letter-spacing:.5px;
+  color:var(--g400);
+}
+.bc button{color:var(--blue);font-weight:500;background:none;padding:0;font-family:"DM Mono",monospace;font-size:11px;letter-spacing:.5px;transition:.15s}
+.bc button:hover{color:var(--blue-h)}
+.bc-sep{color:var(--g300)}
+.ph-tag{
+  font-family:"DM Mono",monospace;
+  font-size:10px;font-weight:500;letter-spacing:2px;
+  text-transform:uppercase;color:var(--blue);margin-bottom:14px;
+}
+.ph h1{
+  font-size:clamp(28px,4vw,52px);
+  font-weight:800;letter-spacing:-2px;
+  color:var(--ink);line-height:1.08;margin-bottom:14px;
+}
+.ph h1 em{
+  font-family:"Lora",serif;
+  font-style:italic;font-weight:400;
+  color:var(--blue);letter-spacing:-1px;
+}
+.ph-p{font-size:16px;color:var(--g500);max-width:560px;line-height:1.75}
+.pb{padding:52px 5% 80px}
+.sec-lbl{
+  font-family:"DM Mono",monospace;
+  font-size:10px;font-weight:500;letter-spacing:2px;
+  text-transform:uppercase;color:var(--g400);
+  margin-bottom:20px;padding-bottom:14px;
+  border-bottom:var(--rule);
+}
+.div-h{height:1px;background:var(--g200);margin:44px 0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0;border:var(--rule)}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:var(--rule)}
+.g2c,.g3c{padding:28px 24px;border-right:var(--rule);border-bottom:var(--rule)}
+.g2 .g2c:nth-child(2n),.g3 .g3c:nth-child(3n){border-right:none}
+.g2 .g2c:nth-last-child(-n+2),.g3 .g3c:nth-last-child(-n+3){border-bottom:none}
+/* fix: last row of g2/g3 bottom */
+.cb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:var(--rule)}
+.cbc{padding:28px 24px;border-right:var(--rule);border-bottom:var(--rule)}
+.cbc:nth-child(3n){border-right:none}
+.cbc:nth-last-child(-n+3){border-bottom:none}
+.cb-grid .g3c{padding:28px 24px;border-right:var(--rule);border-bottom:var(--rule)}
+/* Text */
+.label{font-family:"DM Mono",monospace;font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--g400);margin-bottom:8px}
+.h2{font-size:clamp(18px,2vw,26px);font-weight:700;letter-spacing:-.8px;color:var(--ink);margin-bottom:12px}
+.h3{font-size:17px;font-weight:700;letter-spacing:-.4px;color:var(--ink);margin-bottom:10px}
+.body{font-size:14.5px;color:var(--g500);line-height:1.75}
+.body-lg{font-size:16px;color:var(--g600);line-height:1.8}
+/* Feature list */
+.fl{list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.fl li{
+  font-size:14px;color:var(--g600);line-height:1.55;
+  padding:10px 0 10px 20px;
+  border-bottom:var(--rule);
+  position:relative;
+}
+.fl li::before{
+  content:"—";position:absolute;left:0;top:10px;
+  font-family:"DM Mono",monospace;
+  font-size:11px;color:var(--blue);font-weight:500;
+}
+.fl li:last-child{border-bottom:none}
+/* Stat card */
+.scard{padding:24px;border:var(--rule);background:var(--w)}
+.scard-n{
+  font-size:32px;font-weight:800;color:var(--ink);
+  letter-spacing:-1.5px;line-height:1;margin-bottom:6px;
+}
+.scard-n .u{font-size:18px;color:var(--blue);font-weight:700}
+.scard-l{font-size:12px;color:var(--g400);line-height:1.4}
+.pill{
+  display:inline-flex;align-items:center;
+  padding:3px 10px;border-radius:2px;
+  font-family:"DM Mono",monospace;
+  font-size:10.5px;font-weight:500;letter-spacing:.3px;
+}
+.pb2{background:var(--blue-xl);color:var(--blue);border:1px solid var(--blue-m)}
+.pt{background:#ecfeff;color:#0e7490;border:1px solid #a5f3fc}
+.pg{background:#f0fdf4;color:#166534;border:1px solid #bbf7d0}
+.ps{background:var(--g100);color:var(--g600);border:var(--rule)}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+/* Timeline */
+.tl{display:flex;flex-direction:column}
+.tl-row{
+  display:grid;grid-template-columns:140px 1fr;gap:0;
+  border-bottom:var(--rule);
+}
+.tl-row:last-child{border-bottom:none}
+.tl-yr{
+  padding:18px 20px 18px 0;
+  font-family:"DM Mono",monospace;
+  font-size:11px;font-weight:500;letter-spacing:.5px;
+  color:var(--blue);padding-right:24px;border-right:var(--rule);
+  align-self:start;margin-top:18px;
+}
+.tl-body{padding:18px 0 18px 24px}
+.tl-t{font-size:14.5px;font-weight:700;color:var(--ink);margin-bottom:4px;letter-spacing:-.2px}
+.tl-d{font-size:13.5px;color:var(--g500);line-height:1.6}
+/* Cert grid */
+.cert-g{display:grid;grid-template-columns:1fr 1fr;gap:0;border:var(--rule)}
+.cert-c{
+  padding:10px 14px;font-size:12.5px;font-weight:600;
+  color:var(--g600);border-right:var(--rule);border-bottom:var(--rule);
+  font-family:"DM Mono",monospace;font-size:11px;letter-spacing:.3px;
+}
+.cert-c:nth-child(2n){border-right:none}
+.cert-c:nth-last-child(-n+2){border-bottom:none}
+/* Platform card */
+.pcf{border:var(--rule);margin-bottom:24px}
+.pcf-hd{
+  padding:36px;border-bottom:var(--rule);
+  display:grid;grid-template-columns:auto 1fr;gap:0;align-items:start;
+}
+.pcf-num{
+  font-family:"DM Mono",monospace;font-size:10px;
+  letter-spacing:2px;font-weight:500;color:var(--g400);
+  text-transform:uppercase;margin-bottom:14px;
+}
+.pcf-name{
+  font-size:52px;font-weight:800;letter-spacing:-3px;
+  color:var(--ink);line-height:1;margin-bottom:6px;
+}
+.pcf-full{font-size:15px;color:var(--g500);margin-bottom:14px}
+.pcf-body{padding:36px;display:grid;grid-template-columns:1.2fr 1fr;gap:48px;border-bottom:var(--rule)}
+.pcf-impl{padding:24px 36px;background:var(--mist)}
+.pcf-impl-t{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:2px;font-weight:500;color:var(--g400);text-transform:uppercase;margin-bottom:10px}
+.mod-list{
+  font-family:"DM Mono",monospace;font-size:12px;
+  color:var(--g500);line-height:1.9;letter-spacing:.2px;
+}
+/* Case study card */
+.cs-card{border:var(--rule);margin-bottom:16px;transition:.2s}
+.cs-card:hover{border-color:var(--blue)}
+.cs-hd{
+  padding:22px 24px;border-bottom:var(--rule);
+  display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
+}
+.cs-hd h3{font-size:16px;font-weight:700;letter-spacing:-.3px;color:var(--ink);margin-bottom:3px}
+.cs-sub{font-size:11.5px;color:var(--g400)}
+.cs-stats-g{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-bottom:var(--rule);
+}
+.cs-stat{padding:18px 20px;border-right:var(--rule)}
+.cs-stat:last-child{border-right:none}
+.cs-n{font-size:22px;font-weight:800;letter-spacing:-.8px;color:var(--ink);line-height:1}
+.cs-n .u{font-size:13px;color:var(--blue);font-weight:700}
+.cs-l{font-size:11px;color:var(--g400);margin-top:3px;line-height:1.3}
+.cs-ft{padding:14px 24px;background:var(--mist)}
+/* QSUT Featured */
+.qsut-block{border:var(--rule);margin-bottom:24px}
+.qb-top{
+  padding:36px;
+  background:var(--navy);
+  border-bottom:var(--rule);
+}
+.qb-label{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:2px;font-weight:500;color:rgba(255,255,255,.35);text-transform:uppercase;margin-bottom:16px}
+.qb-name{font-size:22px;font-weight:700;color:#fff;letter-spacing:-.6px;margin-bottom:6px;line-height:1.2}
+.qb-sub{font-size:13px;color:rgba(255,255,255,.45)}
+.qb-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.qb-tag{
+  font-family:"DM Mono",monospace;font-size:10px;
+  padding:3px 9px;border:1px solid rgba(255,255,255,.15);
+  border-radius:2px;color:rgba(255,255,255,.5);
+}
+.qb-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);
+}
+.qb-stat{padding:24px;border-right:var(--rule);border-bottom:var(--rule)}
+.qb-stat:nth-child(3n){border-right:none}
+.qb-stat:nth-last-child(-n+3){border-bottom:none}
+.qb-n{font-size:28px;font-weight:800;letter-spacing:-1.2px;color:var(--ink);line-height:1;margin-bottom:5px}
+.qb-n .u{font-size:15px;color:var(--blue);font-weight:700}
+.qb-l{font-size:12px;color:var(--g400);line-height:1.4}
+/* Blog cards */
+.bc-card{
+  padding:24px;border:var(--rule);border-right:none;
+  border-bottom:none;cursor:pointer;transition:.15s;
+  background:var(--w);
+}
+.bc-card:hover{background:var(--mist)}
+.blog-g{display:grid;grid-template-columns:repeat(3,1fr);border:var(--rule)}
+.blog-g .bc-card{border:none;border-right:var(--rule);border-bottom:var(--rule)}
+.blog-g .bc-card:nth-child(3n){border-right:none}
+.blog-g .bc-card:nth-last-child(-n+3){border-bottom:none}
+.bc-cat{
+  font-family:"DM Mono",monospace;font-size:10px;
+  font-weight:500;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--blue);margin-bottom:10px;
+}
+.bc-card h3{font-size:14.5px;font-weight:700;color:var(--ink);line-height:1.45;letter-spacing:-.2px}
+.bc-read{
+  font-family:"DM Mono",monospace;font-size:10.5px;
+  font-weight:500;letter-spacing:.5px;color:var(--blue);
+  margin-top:14px;
+}
+/* Contact */
+.co-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:0;border:var(--rule)}
+.co-left{border-right:var(--rule)}
+.co-box{padding:24px;border-bottom:var(--rule)}
+.co-box:last-child{border-bottom:none}
+.co-bt{font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.co-bt::before{content:"";width:3px;height:16px;background:var(--blue);border-radius:1px;flex-shrink:0}
+.co-row{display:flex;gap:0;margin-bottom:10px;border-bottom:var(--rule);padding-bottom:10px;font-size:13.5px;color:var(--g600)}
+.co-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.co-lbl{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:1px;color:var(--g400);min-width:80px;padding-top:2px;flex-shrink:0}
+.co-val a{color:var(--blue)}
+.fw{padding:36px;background:var(--mist)}
+.fw h2{font-size:22px;font-weight:700;letter-spacing:-.6px;color:var(--ink);margin-bottom:5px}
+.fw-s{font-size:14px;color:var(--g500);margin-bottom:28px;line-height:1.6}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-family:"DM Mono",monospace;font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--g500);margin-bottom:6px}
+.fg input,.fg textarea,.fg select{
+  width:100%;background:var(--w);
+  border:var(--rule);
+  border-radius:3px;padding:11px 14px;
+  font-size:14px;color:var(--ink);
+  font-family:"Bricolage Grotesque",sans-serif;
+  transition:.2s;outline:none;
+}
+.fg input:focus,.fg textarea:focus,.fg select:focus{
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px rgba(26,71,200,.08);
+}
+.fg textarea{height:96px;resize:vertical}
+.fg-r{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-submit{
+  width:100%;padding:13px;background:var(--blue);color:#fff;
+  border-radius:3px;font-size:14.5px;font-weight:700;
+  letter-spacing:.2px;transition:.2s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-submit:hover{background:var(--blue-h);transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,71,200,.3)}
+/* Arkimedo specific */
+.arki-row{display:grid;grid-template-columns:1fr 1fr;gap:0;border:var(--rule);margin-bottom:4px}
+.arki-row .arki-cell{padding:20px 24px;border-right:var(--rule)}
+.arki-row .arki-cell:last-child{border-right:none}
+.arki-ct{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:6px;letter-spacing:-.2px}
+.arki-cd{font-size:13.5px;color:var(--g500);line-height:1.65}
+.arki-mods-text{
+  font-family:"DM Mono",monospace;
+  font-size:12px;color:var(--g500);
+  line-height:2;letter-spacing:.2px;
+}
+/* About intro */
+.ab-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:0;border:var(--rule);margin-bottom:24px}
+.ab-main{padding:36px;border-right:var(--rule)}
+.ab-side{padding:36px}
+/* Verify badge */
+.verify-block{
+  padding:18px 20px;
+  background:var(--mist);
+  border:var(--rule);
+  border-left:3px solid var(--blue);
+  margin-top:16px;
+}
+.vb-t{font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.vb-d{font-size:13px;color:var(--g500);line-height:1.6}
+/* Security badge */
+.sec-badge{
+  padding:16px 18px;
+  background:#f0fdf4;
+  border:1px solid #bbf7d0;
+  border-left:3px solid #16a34a;
+  margin-top:16px;
+}
+.sec-badge p{font-size:13px;font-weight:600;color:#15803d}
+/* Footer */
+footer{background:var(--ink);color:#fff;padding:52px 5% 28px}
+.ft{display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr;gap:48px;margin-bottom:40px}
+.fb-logo{height:32px;width:auto;filter:brightness(0) invert(1);opacity:.8;margin-bottom:16px;display:block}
+.fb p{font-size:13.5px;color:#64748b;line-height:1.7;margin-bottom:18px;max-width:260px}
+.fi-row{display:flex;flex-wrap:wrap;gap:4px}
+.fi{
+  padding:3px 9px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:2px;
+  font-family:"DM Mono",monospace;
+  font-size:10px;color:#475569;
+}
+.fc h4{
+  font-family:"DM Mono",monospace;
+  font-size:10px;font-weight:500;letter-spacing:2px;
+  text-transform:uppercase;color:#475569;margin-bottom:16px;
+}
+.fc a,.fc button{display:block;font-size:13.5px;color:#64748b;margin-bottom:8px;transition:.15s;text-align:left;background:none;font-family:"Bricolage Grotesque",sans-serif}
+.fc a:hover,.fc button:hover{color:#fff}
+.fb-bot{
+  border-top:1px solid rgba(255,255,255,.07);
+  padding-top:20px;
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
+}
+.fb-bot p,.fb-bot span{
+  font-family:"DM Mono",monospace;
+  font-size:11px;color:#334155;letter-spacing:.3px;
+}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
+.rv.in{opacity:1;transform:translateY(0)}
+.rv.d1{transition-delay:.07s}.rv.d2{transition-delay:.14s}.rv.d3{transition-delay:.21s}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+  .nav-links,.nav-cta{display:none}
+  .ham{display:flex}
+  .ncg{grid-template-columns:repeat(2,1fr)}
+  .nc:nth-child(2n){border-right:none}
+  .nc:nth-child(n+7){border-bottom:none}
+  .nc:nth-child(n+3):nth-child(-n+6){border-bottom:var(--rule)}
+  .ft{grid-template-columns:1fr 1fr}
+  .co-grid{grid-template-columns:1fr}
+  .co-left{border-right:none;border-bottom:var(--rule)}
+  .pcf-body{grid-template-columns:1fr}
+  .ab-grid{grid-template-columns:1fr}
+  .ab-main{border-right:none;border-bottom:var(--rule)}
+}
+@media(max-width:768px){
+  .g2,.g3,.cb-grid,.hero-stats,.qb-stats,.cs-stats-g{grid-template-columns:1fr}
+  .g2c,.g3c,.cbc{border-right:none}
+  .g2c,.g3c,.cbc,.hs,.qb-stat,.cs-stat{border-bottom:var(--rule)}
+  .ncg{grid-template-columns:1fr}
+  .nc{border-right:none!important}
+  .nc:last-child{border-bottom:none}
+  .blog-g{grid-template-columns:1fr}
+  .blog-g .bc-card{border-right:none}
+  .ft{grid-template-columns:1fr}
+  .fg-r{grid-template-columns:1fr}
+  .pcf-hd{grid-template-columns:1fr}
+  .arki-row{grid-template-columns:1fr}
+  .arki-row .arki-cell{border-right:none;border-bottom:var(--rule)}
+  .tl-row{grid-template-columns:80px 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo" onclick="gp('home')">
+    <img src="data:image/jpeg;base64,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" alt="ONI shpk">
+  </div>
+  <div class="nav-links">
+    <button class="nl" onclick="gp('about')" data-k="na">About</button>
+    <button class="nl" onclick="gp('platforms')" data-k="npl">Platforms</button>
+    <button class="nl" onclick="gp('cases')" data-k="ncs">Case Studies</button>
+    <button class="nl" onclick="gp('technology')" data-k="nte">Technology</button>
+    <button class="nl" onclick="gp('services')" data-k="nsv">Services</button>
+    <button class="nl" onclick="gp('arkimedo')" data-k="nar">Arkimedo 21</button>
+    <button class="nl" onclick="gp('contact')" data-k="nco">Contact</button>
+  </div>
+  <div class="nav-r">
+    <div class="lang-sw">
+      <button class="lb on" onclick="setL('en')">EN</button>
+      <button class="lb" onclick="setL('sq')">SQ</button>
+    </div>
+    <button class="nav-cta" onclick="gp('contact')" data-k="nd">Request Demo</button>
+    <button class="ham" onclick="tm()"><span class="hb"></span><span class="hb"></span><span class="hb"></span></button>
+  </div>
+</nav>
+<div id="mnav">
+  <button class="mnl" onclick="gp('about');tm()" data-k="na">About</button>
+  <button class="mnl" onclick="gp('platforms');tm()" data-k="npl">Platforms</button>
+  <button class="mnl" onclick="gp('cases');tm()" data-k="ncs">Case Studies</button>
+  <button class="mnl" onclick="gp('technology');tm()" data-k="nte">Technology</button>
+  <button class="mnl" onclick="gp('services');tm()" data-k="nsv">Services</button>
+  <button class="mnl" onclick="gp('arkimedo');tm()" data-k="nar">Arkimedo 21</button>
+  <button class="mnl" onclick="gp('contact');tm()" data-k="nco">Contact</button>
+  <div class="mf">
+    <button class="lb" onclick="setL('en');tm()">EN</button>
+    <button class="lb" onclick="setL('sq');tm()">SQ</button>
+  </div>
+</div>
+
+<!-- ══════════════ HOME ══════════════ -->
+<div id="pg-home" class="page active pw">
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-label" data-k="hbg">Healthcare Information Systems — Albania &amp; Kosovo</div>
+      <h1 data-k="hh1">The digital infrastructure<br>behind <em>Albania's hospitals</em></h1>
+      <p class="hero-p" data-k="hp">ONI shpk builds and maintains the core HIS/HMS platforms that power Albania's most complex university hospitals. In operation since 1994. ISO 27001 certified. Critical National Infrastructure.</p>
+      <div class="hero-btns">
+        <button class="btn-w" onclick="gp('contact')"><span data-k="hc1">Request a Demo</span> →</button>
+        <button class="btn-o" onclick="gp('platforms')"><span data-k="hc2">Explore Platforms</span></button>
+      </div>
+    </div>
+    <div class="hero-stats rv">
+      <div class="hs"><div class="hs-n">30<span>+</span></div><div class="hs-l" data-k="hs1">Years of operation</div></div>
+      <div class="hs"><div class="hs-n">600<span>+</span></div><div class="hs-l" data-k="hs2">Active users at QSUT</div></div>
+      <div class="hs"><div class="hs-n">1,800</div><div class="hs-l" data-k="hs3">Requests per minute</div></div>
+      <div class="hs"><div class="hs-n">4</div><div class="hs-l" data-k="hs4">University hospitals</div></div>
+    </div>
+  </div>
+
+  <div class="trust">
+    <span class="trust-lbl" data-k="tl">Live deployments</span>
+    <div class="trust-items">
+      <span class="ti">QSUT "Mother Teresa"</span>
+      <span class="ti">University Trauma Hospital</span>
+      <span class="ti">QSRT "Shefqet Ndroqi"</span>
+      <span class="ti">Fier · Vlora · Shkodra</span>
+      <span class="ti">18 Kosovo Centers</span>
+      <span class="ti">Municipality of Tirana</span>
+      <span class="ti">ISO 27001 Certified</span>
+    </div>
+  </div>
+
+  <div class="ncs">
+    <div class="ncs-lbl" data-k="ncl">Navigate</div>
+    <div class="ncg">
+      <div class="nc feat rv" onclick="gp('platforms')">
+        <span class="nc-num" data-k="n01">01</span>
+        <div class="nc-t" data-k="n1t">SIIS &amp; SISP</div>
+        <div class="nc-s" data-k="n1s">HIS/HMS Platforms</div>
+        <div class="nc-d" data-k="n1d">Two flagship systems — modular, HL7-based, DRG-oriented.</div>
+        <span class="nc-arr">→</span>
+      </div>
+      <div class="nc rv d1" onclick="gp('cases')">
+        <span class="nc-num" data-k="n02">02</span>
+        <div class="nc-t" data-k="n2t">Case Studies</div>
+        <div class="nc-s" data-k="n2s">Verified Impact</div>
+        <div class="nc-d" data-k="n2d">Operational data from QSUT, SUT, QSRT. Albania's longest documented hospital informatization history.</div>
+        <span class="nc-arr">→</span>
+      </div>
+      <div class="nc rv d2" onclick="gp('services')">
+        <span class="nc-num" data-k="n03">03</span>
+        <div class="nc-t" data-k="n3t">Services</div>
+        <div class="nc-s" data-k="n3s">End-to-End</div>
+        <div class="nc-d" data-k="n3d">Implementation, accredited training, 24/7 support, and custom development.</div>
+        <span class="nc-arr">→</span>
+      </div>
+      <div class="nc rv d3" onclick="gp('arkimedo')">
+        <span class="nc-num" data-k="n04">04</span>
+        <div class="nc-t" data-k="n4t">Arkimedo 21</div>
+        <div class="nc-s" data-k="n4s">ERP 360°</div>
+        <div class="nc-d" data-k="n4d">Enterprise resource platform for public institutions and municipalities.</div>
+        <span class="nc-arr">→</span>
+      </div>
+      <div class="nc rv" onclick="gp('technology')">
+        <span class="nc-num" data-k="n05">05</span>
+        <div class="nc-t" data-k="n5t">Technology</div>
+        <div class="nc-s" data-k="n5s">Architecture &amp; Security</div>
+        <div class="nc-d" data-k="n5d">HL7, ISO 27001, DRG. Built for critical infrastructure environments.</div>
+        <span class="nc-arr">→</span>
+      </div>
+      <div class="nc rv d1" onclick="gp('about')">
+        <span class="nc-num" data-k="n06">06</span>
+        <div class="nc-t" data-k="n6t">About ONI</div>
+        <div class="nc-s" data-k="n6s">Est. 1994</div>
+        <div class="nc-d" data-k="n6d">Founded in Tirana. Albania's only HIS/HMS developer with national IP certification.</div>
+        <span class="nc-arr">→</span>
+      </div>
+      <div class="nc rv d2" onclick="gp('blog')">
+        <span class="nc-num" data-k="n07">07</span>
+        <div class="nc-t" data-k="n7t">Blog &amp; Insights</div>
+        <div class="nc-s" data-k="n7s">Knowledge Hub</div>
+        <div class="nc-d" data-k="n7d">Practical insights from real deployments at QSUT, SUT, and QSRT.</div>
+        <span class="nc-arr">→</span>
+      </div>
+      <div class="nc rv d3" onclick="gp('contact')">
+        <span class="nc-num" data-k="n08">08</span>
+        <div class="nc-t" data-k="n8t">Contact &amp; Demo</div>
+        <div class="nc-s" data-k="n8s">Get in Touch</div>
+        <div class="nc-d" data-k="n8d">Offices in Tirana and Prishtina. Request a personalized demonstration.</div>
+        <span class="nc-arr">→</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ ABOUT ══════════════ -->
+<div id="pg-about" class="page pw">
+  <div class="ph">
+    <div class="bc"><button onclick="gp('home')" data-k="bh">Home</button><span class="bc-sep"> / </span><span data-k="ba">About</span></div>
+    <div class="ph-tag" data-k="pat">Company</div>
+    <h1 data-k="pah1">Three decades of <em>healthcare innovation</em></h1>
+    <p class="ph-p" data-k="pap">Albania's only company to have built, deployed, and maintained large-scale HIS/HMS platforms across university and regional hospitals.</p>
+  </div>
+  <div class="pb">
+    <div class="ab-grid rv">
+      <div class="ab-main">
+        <div class="sec-lbl" data-k="awht">Who We Are</div>
+        <p class="body-lg" data-k="awhp" style="margin-bottom:18px">ONI shpk is an Albanian technology company established in 1994, specializing in Healthcare Information Systems, enterprise ERP solutions, and digital transformation for public institutions. Our platforms SIIS and SISP are the only Albanian-developed HIS/HMS solutions certified with national intellectual property rights (RDA 50, RDA 48/3) — deployed in the country's most critical healthcare environments.</p>
+        <p class="body" data-k="awhp2" style="margin-bottom:28px">We operate across Albania and Kosovo, providing mission-critical digital infrastructure, 24/7 technical maintenance, and continuous system development to university hospitals, regional hospitals, private clinics, and primary care networks.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border:var(--rule)">
+          <div style="padding:20px 22px;border-right:var(--rule)">
+            <div style="font-size:32px;font-weight:800;letter-spacing:-1.5px;color:var(--ink);line-height:1">30<span style="color:var(--blue)">+</span></div>
+            <div class="hs-l" style="color:var(--g400);margin-top:5px" data-k="as1">Years of continuous operation</div>
+          </div>
+          <div style="padding:20px 22px">
+            <div style="font-size:32px;font-weight:800;letter-spacing:-1.5px;color:var(--ink);line-height:1">7<span style="color:var(--blue)">+</span></div>
+            <div class="hs-l" style="color:var(--g400);margin-top:5px" data-k="as2">Hospitals fully digitized</div>
+          </div>
+        </div>
+      </div>
+      <div class="ab-side">
+        <div class="sec-lbl" data-k="acert">Certifications &amp; IP Rights</div>
+        <div class="cert-g" style="margin-bottom:20px">
+          <div class="cert-c">ISO 9001:2015</div><div class="cert-c">ISO 27001:2013</div>
+          <div class="cert-c">ISO 14001:2015</div><div class="cert-c">ISO 55001:2014</div>
+          <div class="cert-c">OHSAS 18001:2007</div><div class="cert-c">PAS 99:2012</div>
+          <div class="cert-c">RDA 50</div><div class="cert-c">RDA 48/3</div>
+        </div>
+        <div class="verify-block">
+          <div class="vb-t" data-k="aipt">Made in Albania</div>
+          <div class="vb-d" data-k="aipp">SIIS and SISP certified with national IP rights (RDA 50) and exclusive usage rights (RDA 48/3) — the only HIS/HMS of this scale developed and owned by an Albanian company.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="div-h"></div>
+    <div class="sec-lbl rv" data-k="avt">Core Values</div>
+    <div class="g3 rv">
+      <div class="g3c">
+        <div class="h3" data-k="v1t">Security First</div>
+        <p class="body" data-k="v1p">ISO 27001 certified. SISP classified as Critical Information Infrastructure by government decree VKM 553/2020. Systems that held firm during Albania's 2022 national cyberattack.</p>
+      </div>
+      <div class="g3c">
+        <div class="h3" data-k="v2t">Always On</div>
+        <p class="body" data-k="v2p">Continuous 24/7 uptime across Albania's most demanding clinical environments. Peak throughput of 1,800 requests per minute at QSUT.</p>
+      </div>
+      <div class="g3c">
+        <div class="h3" data-k="v3t">Long-term Partnership</div>
+        <p class="body" data-k="v3p">We maintain systems beyond contractual obligations. Mission-critical infrastructure requires unconditional commitment, not transactional service.</p>
+      </div>
+      <div class="g3c">
+        <div class="h3" data-k="v4t">Continuous Innovation</div>
+        <p class="body" data-k="v4p">ICD10 transition, laboratory automation, electronic prescriptions, DRG costing — all delivered iteratively across live hospital environments.</p>
+      </div>
+      <div class="g3c">
+        <div class="h3" data-k="v5t">Transparency</div>
+        <p class="body" data-k="v5p">Every system we build produces verifiable data. DRG-oriented architectures enable accurate cost-per-patient reporting and standardized financial disclosure.</p>
+      </div>
+      <div class="g3c">
+        <div class="h3" data-k="v6t">Proven Reliability</div>
+        <p class="body" data-k="v6p">Thirty years of institutional trust across Albania's most complex public health environments. Systems that clinicians depend on daily without compromise.</p>
+      </div>
+    </div>
+
+    <div class="div-h"></div>
+    <div class="sec-lbl rv" data-k="atlt">Company Timeline</div>
+    <div class="tl rv">
+      <div class="tl-row"><div class="tl-yr">1994</div><div class="tl-body"><div class="tl-t" data-k="t1t">ONI shpk Founded</div><div class="tl-d" data-k="t1d">Established in Tirana, Albania as a technology company focused on healthcare IT and public sector digital infrastructure.</div></div></div>
+      <div class="tl-row"><div class="tl-yr">2007–2010</div><div class="tl-body"><div class="tl-t" data-k="t2t">First Regional Deployments</div><div class="tl-d" data-k="t2d">Shkodra Regional Hospital: the first electronic medical record system in a public Albanian hospital. Fier and Vlora regional deployments follow.</div></div></div>
+      <div class="tl-row"><div class="tl-yr">2011</div><div class="tl-body"><div class="tl-t" data-k="t3t">SISP at QSUT</div><div class="tl-d" data-k="t3d">Albania's largest hospital fully powered by SISP. Classified as Critical Information Infrastructure by government decree.</div></div></div>
+      <div class="tl-row"><div class="tl-yr">2018–2025</div><div class="tl-body"><div class="tl-t" data-k="t4t">SIIS at University Trauma Hospital</div><div class="tl-d" data-k="t4d">Complete clinical and financial digitization of SUT. DRG costing, pharmaceutical traceability, automated laboratory and imaging workflows.</div></div></div>
+      <div class="tl-row"><div class="tl-yr">2019–2025</div><div class="tl-body"><div class="tl-t" data-k="t5t">QSRT Transformation</div><div class="tl-d" data-k="t5d">SIIS deployment and institutional transformation at QSRT. Integration of Kavaja Hospital (2025). Upgraded to Regional &amp; University status.</div></div></div>
+      <div class="tl-row"><div class="tl-yr">2020–2025</div><div class="tl-body"><div class="tl-t" data-k="t6t">Arkimedo 21, Municipality of Tirana</div><div class="tl-d" data-k="t6d">ERP deployed across all municipal educational institutions: schools, kindergartens, nurseries, dormitories, and administrative units.</div></div></div>
+      <div class="tl-row"><div class="tl-yr">2023–2025</div><div class="tl-body"><div class="tl-t" data-k="t7t">ICD10, Lab Automation &amp; E-Prescription</div><div class="tl-d" data-k="t7d">ICD10 transition across all hospitals, SISP-LAB full automation, and electronic hospital prescription for Oncology &amp; Hematology.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ PLATFORMS ══════════════ -->
+<div id="pg-platforms" class="page pw">
+  <div class="ph">
+    <div class="bc"><button onclick="gp('home')" data-k="bh">Home</button><span class="bc-sep"> / </span><span data-k="bpl">Platforms</span></div>
+    <div class="ph-tag">HIS/HMS Platforms</div>
+    <h1 data-k="plh1">Built for <em>every scale</em></h1>
+    <p class="ph-p" data-k="plp">Two distinct platforms covering Albania's full range of hospital complexity — from 200-bed regional centers to the country's largest tertiary care institution.</p>
+  </div>
+  <div class="pb">
+    <!-- SIIS -->
+    <div class="pcf rv">
+      <div class="pcf-hd">
+        <div>
+          <div class="pcf-num" data-k="sif">For hospitals up to 200 beds</div>
+          <div class="pcf-name">SIIS</div>
+          <div class="pcf-full" data-k="sifu">Integrated Healthcare Information System</div>
+          <div class="pills">
+            <span class="pill pt">HL7-based</span>
+            <span class="pill pb2">DRG-oriented</span>
+            <span class="pill pg">ICD10</span>
+            <span class="pill ps">OPS-ICD-v3</span>
+          </div>
+        </div>
+      </div>
+      <div class="pcf-body">
+        <div>
+          <p class="body-lg" data-k="sid" style="margin-bottom:24px">A modular, HL7-based HIS built for regional hospitals and specialized centers. Real-time clinical, administrative, and financial workflows with complete DRG orientation and ICD10 coding standards.</p>
+          <div class="sec-lbl" data-k="sift">Capabilities</div>
+          <ul class="fl">
+            <li data-k="sf1">EMR/EHR, Ambulatory, Emergency &amp; Inpatient management</li>
+            <li data-k="sf2">Pharmacy with ATC coding, Laboratory (SIIS-LAB), Imaging</li>
+            <li data-k="sf3">DRG-oriented costing engine — cost per patient, diagnosis, procedure</li>
+            <li data-k="sf4">Full integration with LIS, RIS, PACS</li>
+            <li data-k="sf5">ICD10 + OPS-ICD-v3 clinical coding</li>
+          </ul>
+        </div>
+        <div>
+          <div class="sec-lbl" data-k="simt">Modules</div>
+          <div class="mod-list" data-k="mods_siis">EMR/EHR · Emergency · Inpatient · Pharmacy · Laboratory · Imaging · DRG · Ambulatory · Finance</div>
+        </div>
+      </div>
+      <div class="pcf-impl">
+        <div class="pcf-impl-t" data-k="siit">Implementations</div>
+        <div class="pills">
+          <span class="pill ps">SUT — Tirana</span>
+          <span class="pill ps">QSRT — Tirana</span>
+          <span class="pill ps">Fier Regional</span>
+          <span class="pill ps">Vlora Regional</span>
+          <span class="pill ps">Shkodra Regional</span>
+          <span class="pill ps">My Medical Clinic</span>
+          <span class="pill ps">18 Kosovo centers</span>
+        </div>
+      </div>
+    </div>
+    <!-- SISP -->
+    <div class="pcf rv">
+      <div class="pcf-hd" style="background:var(--navy)">
+        <div>
+          <div class="pcf-num" style="color:rgba(255,255,255,.35)" data-k="spf">For hospitals above 200 beds</div>
+          <div class="pcf-name" style="color:#fff">SISP</div>
+          <div class="pcf-full" style="color:rgba(255,255,255,.55)" data-k="spfu">Public Health Information System</div>
+          <div class="pills">
+            <span class="pill" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.6)">Critical Infrastructure</span>
+            <span class="pill" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.6)">HL7-based</span>
+            <span class="pill" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.6)">600+ users</span>
+          </div>
+        </div>
+      </div>
+      <div class="pcf-body">
+        <div>
+          <p class="body-lg" data-k="spd" style="margin-bottom:24px">Albania's most advanced HIS, continuously powering QSUT since 2011. The first DRG-oriented database in the country. Classified as Critical Information Infrastructure under VKM 553/2020.</p>
+          <div class="sec-lbl">Capabilities</div>
+          <ul class="fl">
+            <li data-k="sp1">600+ active users, 300+ workstations across QSUT</li>
+            <li data-k="sp2">SISP-LAB: fully automated laboratory workflows (2024)</li>
+            <li data-k="sp3">Electronic hospital prescription — Oncology &amp; Hematology (2025)</li>
+            <li data-k="sp4">100+ custom reports; SISP-PHARMACY with 54 dedicated reports</li>
+            <li data-k="sp5">Integrations: LIS, RIS, PACS, PIS, DPGJC, e-Referral</li>
+          </ul>
+        </div>
+        <div>
+          <div class="sec-lbl" data-k="spmt">Modules</div>
+          <div class="mod-list" data-k="mods_sisp">SISP-LAB · SISP-IMG · SISP-PIS · SISP-AMB · Inpatient · Emergency · Costing · Oncology · Reports</div>
+        </div>
+      </div>
+      <div class="pcf-impl" style="background:var(--navy);border-top:1px solid rgba(255,255,255,.08)">
+        <div class="pcf-impl-t" style="color:rgba(255,255,255,.3)" data-k="spit">Implementation</div>
+        <div style="font-size:14.5px;font-weight:600;color:rgba(255,255,255,.7)" data-k="spqs">QSUT 'Mother Teresa' — Albania's largest hospital — continuously since 2011</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ CASE STUDIES ══════════════ -->
+<div id="pg-cases" class="page pw">
+  <div class="ph">
+    <div class="bc"><button onclick="gp('home')" data-k="bh">Home</button><span class="bc-sep"> / </span><span data-k="bcs">Case Studies</span></div>
+    <div class="ph-tag">Implementations</div>
+    <h1 data-k="csh1"><em>Verified</em> impact at scale</h1>
+    <p class="ph-p" data-k="csp">Albania's longest continuous history of hospital informatization. All operational data verified from 2025 institutional reports.</p>
+  </div>
+  <div class="pb">
+    <div class="sec-lbl rv" data-k="csft">Featured — Largest Deployment</div>
+    <div class="qsut-block rv">
+      <div class="qb-top">
+        <div class="qb-label">SISP — Critical Information Infrastructure</div>
+        <div class="qb-name" data-k="qt">University Hospital Center "Mother Teresa" (QSUT)</div>
+        <div class="qb-sub" data-k="ql">Tirana, Albania — Critical Information Infrastructure since 2011</div>
+        <div class="qb-tags">
+          <span class="qb-tag" data-k="qi1">First DRG-oriented database in Albania</span>
+          <span class="qb-tag" data-k="qi2">SISP-LAB automation (2024)</span>
+          <span class="qb-tag" data-k="qi3">Electronic prescription — Oncology (2025)</span>
+          <span class="qb-tag" data-k="qi4">100+ custom reports</span>
+        </div>
+      </div>
+      <div class="qb-stats">
+        <div class="qb-stat"><div class="qb-n">217<span class="u">K</span></div><div class="qb-l" data-k="qs1">Ambulatory patients (2025)</div></div>
+        <div class="qb-stat"><div class="qb-n">403<span class="u">K</span></div><div class="qb-l" data-k="qs2">Total cases</div></div>
+        <div class="qb-stat"><div class="qb-n">478<span class="u">K</span></div><div class="qb-l" data-k="qs3">Services — highest decade growth</div></div>
+        <div class="qb-stat"><div class="qb-n">82<span class="u">K</span></div><div class="qb-l" data-k="qs4">Emergency patients without ID</div></div>
+        <div class="qb-stat"><div class="qb-n">76.2<span class="u">B</span></div><div class="qb-l" data-k="qs5">ALL pharmaceutical circulation (2016–2025)</div></div>
+        <div class="qb-stat"><div class="qb-n">81</div><div class="qb-l" data-k="qs6">Ambulatory structures monitored</div></div>
+      </div>
+    </div>
+
+    <div class="sec-lbl rv" style="margin-top:44px" data-k="csot">Further Implementations</div>
+    <div class="cs-card rv">
+      <div class="cs-hd">
+        <div>
+          <h3 data-k="sutn">University Trauma Hospital (SUT)</h3>
+          <div class="cs-sub" data-k="sutl">Tirana · SIIS · 2018–2025</div>
+        </div>
+        <span class="pill pt">SIIS</span>
+      </div>
+      <div class="cs-stats-g">
+        <div class="cs-stat"><div class="cs-n">75,684</div><div class="cs-l" data-k="ss1">Hospital admissions (86% emergency)</div></div>
+        <div class="cs-stat"><div class="cs-n">11,153</div><div class="cs-l" data-k="ss2">Surgical interventions</div></div>
+        <div class="cs-stat"><div class="cs-n">198<span class="u">K</span></div><div class="cs-l" data-k="ss3">Laboratory analyses</div></div>
+        <div class="cs-stat"><div class="cs-n">1.07<span class="u">B</span></div><div class="cs-l" data-k="ss4">ALL total institutional cost</div></div>
+      </div>
+      <div class="cs-ft">
+        <div class="pills">
+          <span class="pill pt" data-k="si1">Standardized EMR</span>
+          <span class="pill pt" data-k="si2">DRG costing engine</span>
+          <span class="pill pt" data-k="si3">ATC pharmaceutical traceability</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cs-card rv">
+      <div class="cs-hd">
+        <div>
+          <h3 data-k="rtn">QSRT "Shefqet Ndroqi"</h3>
+          <div class="cs-sub" data-k="rtl">Tirana · SIIS · 2019–2025</div>
+        </div>
+        <span class="pill pt">SIIS</span>
+      </div>
+      <div class="cs-stats-g">
+        <div class="cs-stat"><div class="cs-n">122<span class="u">K</span></div><div class="cs-l" data-k="rs1">Total services</div></div>
+        <div class="cs-stat"><div class="cs-n">12,379</div><div class="cs-l" data-k="rs2">Surgical interventions</div></div>
+        <div class="cs-stat"><div class="cs-n">21,785</div><div class="cs-l" data-k="rs3">Imaging examinations</div></div>
+        <div class="cs-stat"><div class="cs-n">2.97<span class="u">B</span></div><div class="cs-l" data-k="rs4">ALL pharmaceutical circulation</div></div>
+      </div>
+      <div class="cs-ft">
+        <div class="pills">
+          <span class="pill pg" data-k="ri1">Upgraded to University &amp; Regional status (2025)</span>
+          <span class="pill pg" data-k="ri2">Kavaja Hospital integration (2025)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cs-card rv">
+      <div class="cs-hd">
+        <div>
+          <h3 data-k="otn">Regional Hospitals &amp; Kosovo</h3>
+          <div class="cs-sub" data-k="otl">Shkodra · Fier · Vlora · 18 Kosovo primary care centers</div>
+        </div>
+        <span class="pill ps">SIIS</span>
+      </div>
+      <div class="cs-stats-g">
+        <div class="cs-stat"><div class="cs-n">500</div><div class="cs-l" data-k="os1">Beds — Shkodra (first public hospital EMR, 2007)</div></div>
+        <div class="cs-stat"><div class="cs-n">370</div><div class="cs-l" data-k="os2">Beds — Fier Regional Hospital</div></div>
+        <div class="cs-stat"><div class="cs-n">240</div><div class="cs-l" data-k="os3">Beds — Vlora Regional Hospital</div></div>
+        <div class="cs-stat"><div class="cs-n">18</div><div class="cs-l" data-k="os4">Kosovo primary care centers</div></div>
+      </div>
+      <div class="cs-ft" style="background:var(--mist)">
+        <div class="mod-list">EMR · Ambulatory · Pharmacy · Laboratory · Imaging · DRG · Finance</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ TECHNOLOGY ══════════════ -->
+<div id="pg-technology" class="page pw">
+  <div class="ph">
+    <div class="bc"><button onclick="gp('home')" data-k="bh">Home</button><span class="bc-sep"> / </span><span data-k="bte">Technology</span></div>
+    <div class="ph-tag">Architecture &amp; Security</div>
+    <h1 data-k="teh1">Built for <em>critical environments</em></h1>
+    <p class="ph-p" data-k="tep">HL7-based modular architecture delivering real-time clinical operations, ISO 27001 information security, and full integration with Albania's national health and government data systems.</p>
+  </div>
+  <div class="pb">
+    <div class="g2 rv">
+      <div class="g2c">
+        <div class="h3" data-k="tc1">Architecture</div>
+        <ul class="fl">
+          <li data-k="ta1">HL7-based protocol for standardized clinical data exchange</li>
+          <li data-k="ta2">Fully modular: EMR, EHR, PMS, LIS, RIS, PACS, DRG</li>
+          <li data-k="ta3">Real-time workflows with granular role-based access control</li>
+          <li data-k="ta4">High-load performance — 1,800 requests/minute sustained (QSUT)</li>
+          <li data-k="ta5">ICD10 and OPS-ICD-v3 clinical coding standards</li>
+        </ul>
+        <div class="pills" style="margin-top:18px">
+          <span class="pill pb2">HL7</span>
+          <span class="pill pb2">ICD-10</span>
+          <span class="pill pb2">OPS-ICD-v3</span>
+          <span class="pill pb2">DRG</span>
+          <span class="pill pb2">ATC</span>
+        </div>
+      </div>
+      <div class="g2c">
+        <div class="h3" data-k="tc2">Security &amp; Compliance</div>
+        <ul class="fl">
+          <li data-k="ts1">ISO 27001:2013 — Information Security Management System</li>
+          <li data-k="ts2">Critical Information Infrastructure designation (VKM 553/2020)</li>
+          <li data-k="ts3">Full audit trails and end-to-end encrypted communications</li>
+          <li data-k="ts4">Automated backup systems and disaster recovery protocols</li>
+          <li data-k="ts5">Operational integrity maintained during Albania's 2022 national cyberattack</li>
+        </ul>
+        <div class="sec-badge">
+          <p data-k="tsb">Systems held uncompromised during the 2022 national cyberattack</p>
+        </div>
+      </div>
+    </div>
+    <div class="g2 rv" style="margin-top:24px">
+      <div class="g2c">
+        <div class="h3" data-k="tc3">Integrations</div>
+        <ul class="fl">
+          <li data-k="ti1">LIS, RIS, PACS — full clinical imaging and laboratory data exchange</li>
+          <li data-k="ti2">DPGJC — national patient identity verification system</li>
+          <li data-k="ti3">e-Referral — national referral and consultation network</li>
+          <li data-k="ti4">AKSHI-compliant government data exchange standards</li>
+        </ul>
+        <div class="pills" style="margin-top:18px">
+          <span class="pill ps">LIS</span>
+          <span class="pill ps">RIS</span>
+          <span class="pill ps">PACS</span>
+          <span class="pill ps">DPGJC</span>
+          <span class="pill ps">e-Referral</span>
+          <span class="pill ps">FSDKSH</span>
+          <span class="pill ps">AKSHI</span>
+        </div>
+      </div>
+      <div class="g2c">
+        <div class="h3" data-k="tc4">Clinical Standards</div>
+        <ul class="fl">
+          <li data-k="tcl1">ICD10 clinical coding — transition completed across all deployments (2023)</li>
+          <li data-k="tcl2">OPS-ICD-v3 surgical and procedure coding</li>
+          <li data-k="tcl3">DRG-oriented financial architecture for FSDKSH reporting</li>
+          <li data-k="tcl4">ATC pharmaceutical classification, dispensing, and traceability</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SERVICES ══════════════ -->
+<div id="pg-services" class="page pw">
+  <div class="ph">
+    <div class="bc"><button onclick="gp('home')" data-k="bh">Home</button><span class="bc-sep"> / </span><span data-k="bsv">Services</span></div>
+    <div class="ph-tag">Services</div>
+    <h1 data-k="svh1">Full-cycle support, <em>end to end</em></h1>
+    <p class="ph-p" data-k="svp">From needs analysis and data migration through deployment, accredited training, and continuous 24/7 technical support — ONI covers the complete institutional lifecycle.</p>
+  </div>
+  <div class="pb">
+    <div class="g2 rv">
+      <div class="g2c">
+        <div class="h3" data-k="sv1t">Implementation &amp; Data Migration</div>
+        <p class="body" data-k="sv1p">Clinical workflow analysis, system configuration, historical data migration with ICD10 and OPS standardization, and modular deployment structured to each institution's specific operational profile.</p>
+      </div>
+      <div class="g2c">
+        <div class="h3" data-k="sv2t">Training &amp; Accreditation</div>
+        <p class="body" data-k="sv2p">ASCKSH-accredited training programs for clinicians, nurses, pharmacists, laboratory technicians, and administrative personnel. Delivered on-site and remotely with documentation, video guides, and role-specific certification.</p>
+      </div>
+      <div class="g2c">
+        <div class="h3" data-k="sv3t">24/7 Technical Support</div>
+        <p class="body" data-k="sv3p">Three support tiers — Gold (continuous 24/7), Silver (business hours + emergency), Bronze (standard hours). Remote and on-site intervention, server monitoring, and backup &amp; recovery management.</p>
+        <div style="margin-top:16px;border:var(--rule)">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr)">
+            <div style="padding:12px 14px;border-right:var(--rule);text-align:center">
+              <div style="font-weight:800;font-size:14px;color:var(--ink)">Gold</div>
+              <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--blue);margin-top:2px;letter-spacing:.5px">24/7</div>
+            </div>
+            <div style="padding:12px 14px;border-right:var(--rule);text-align:center">
+              <div style="font-weight:800;font-size:14px;color:var(--ink)">Silver</div>
+              <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--g400);margin-top:2px;letter-spacing:.3px" data-k="sls">Biz + emergency</div>
+            </div>
+            <div style="padding:12px 14px;text-align:center">
+              <div style="font-weight:800;font-size:14px;color:var(--ink)">Bronze</div>
+              <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--g400);margin-top:2px;letter-spacing:.3px" data-k="slb">Business hours</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="g2c">
+        <div class="h3" data-k="sv4t">Custom Development</div>
+        <p class="body" data-k="sv4p">Purpose-built modules, bespoke reporting (100+ custom reports at QSUT), system-to-system integrations, and workflow automation. Recent deliveries: hospital e-prescription (2025), SISP-LAB automation (2024), ICD10 transition (2023).</p>
+      </div>
+      <div class="g2c">
+        <div class="h3" data-k="sv5t">DRG &amp; Digital Transformation Consulting</div>
+        <p class="body" data-k="sv5p">Institutional digital transformation strategy, DRG costing methodology, clinical documentation standardization, FSDKSH financial reporting architecture, and hospital workflow redesign.</p>
+      </div>
+      <div class="g2c">
+        <div class="h3" data-k="sv6t">Infrastructure &amp; Database Management</div>
+        <p class="body" data-k="sv6p">Hospital network design and installation, server infrastructure, data center solutions, security hardening, and database administration across Oracle, Microsoft SQL Server, and MySQL environments.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ ARKIMEDO ══════════════ -->
+<div id="pg-arkimedo" class="page pw">
+  <div class="ph">
+    <div class="bc"><button onclick="gp('home')" data-k="bh">Home</button><span class="bc-sep"> / </span><span>Arkimedo 21</span></div>
+    <div class="ph-tag">ERP 360°</div>
+    <div style="margin:10px 0 16px">
+      <img src="data:image/jpeg;base64,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" alt="Arkimedo 21 by ONI" style="height:46px;width:auto;object-fit:contain;display:block">
+    </div>
+    <h1 data-k="arh1">Enterprise Resource Planning<br>for <em>public institutions</em></h1>
+    <p class="ph-p" data-k="arp">Arkimedo 21 unifies asset management, logistics, finance, HR, GIS/BIM, and energy monitoring in a single web-based platform — fully traceable, real-time, and configured to the Albanian institutional and regulatory context.</p>
+  </div>
+  <div class="pb">
+    <div class="sec-lbl rv" data-k="arft">Deployed Capabilities</div>
+    <div class="arki-row rv">
+      <div class="arki-cell">
+        <div class="arki-ct" data-k="af1t">Barcode-verified interventions</div>
+        <div class="arki-cd" data-k="af1d">Every technical intervention carries a unique barcode. Completion is verified within the system before the intervention is closed.</div>
+      </div>
+      <div class="arki-cell">
+        <div class="arki-ct" data-k="af2t">Smart notification system</div>
+        <div class="arki-cd" data-k="af2d">Real-time alerts via WhatsApp and system notifications for defects, in-progress interventions, and operational status changes.</div>
+      </div>
+    </div>
+    <div class="arki-row rv">
+      <div class="arki-cell">
+        <div class="arki-ct" data-k="af3t">HVAC monitoring</div>
+        <div class="arki-cd" data-k="af3d">Live monitoring of heating and cooling infrastructure across all buildings managed by the Municipality of Tirana.</div>
+      </div>
+      <div class="arki-cell">
+        <div class="arki-ct" data-k="af4t">HIS integration</div>
+        <div class="arki-cd" data-k="af4d">Seamless data bridge between Arkimedo 21 and SIIS/SISP platforms for unified asset and pharmaceutical logistics.</div>
+      </div>
+    </div>
+
+    <div class="div-h"></div>
+    <div class="sec-lbl rv" data-k="arit">Active Deployments</div>
+    <div class="g2 rv">
+      <div class="g2c">
+        <div class="h3" data-k="ai1t">Municipality of Tirana</div>
+        <p class="body" data-k="ai1d">All educational institutions under municipal administration: schools, kindergartens, nurseries, student dormitories, and administrative units. Full asset inventory, maintenance scheduling, and HVAC monitoring.</p>
+      </div>
+      <div class="g2c">
+        <div class="h3" data-k="ai2t">QSRT "Shefqet Ndroqi"</div>
+        <p class="body" data-k="ai2d">HR module covering staff management, leave administration, shift scheduling, and performance tracking.</p>
+      </div>
+    </div>
+
+    <div class="div-h"></div>
+    <div class="sec-lbl rv" data-k="armt">Platform Modules</div>
+    <div class="verify-block rv">
+      <div class="arki-mods-text" data-k="am">Asset Inventory · Maintenance &amp; Lifecycle · Logistics &amp; Warehouse · Economics &amp; Budget · Energy &amp; Environment · GIS &amp; BIM Mapping · Human Resources · Smart Notifications</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ BLOG ══════════════ -->
+<div id="pg-blog" class="page pw">
+  <div class="ph">
+    <div class="bc"><button onclick="gp('home')" data-k="bh">Home</button><span class="bc-sep"> / </span><span data-k="bbl">Insights</span></div>
+    <div class="ph-tag">Blog &amp; Insights</div>
+    <h1 data-k="blh1">Insights from <em>the frontline</em></h1>
+    <p class="ph-p" data-k="blp">Practical knowledge built from real deployments in Albania's most complex clinical environments — QSUT, SUT, and QSRT.</p>
+  </div>
+  <div class="pb">
+    <div class="blog-g rv">
+      <div class="bc-card"><div class="bc-cat" data-k="b1c">Digital Transformation</div><h3 data-k="b1">Hospital Digital Transformation: The SIIS &amp; SISP Journey (2010–2025)</h3><div class="bc-read" data-k="br">Read →</div></div>
+      <div class="bc-card"><div class="bc-cat" data-k="b2c">DRG &amp; Costing</div><h3 data-k="b2">DRG in Practice: From Theory to Operational Reporting in Albanian Hospitals</h3><div class="bc-read" data-k="br">Read →</div></div>
+      <div class="bc-card"><div class="bc-cat" data-k="b3c">Laboratory</div><h3 data-k="b3">Laboratory Automation: How SISP-LAB &amp; SIIS-LAB Eliminated Manual Errors</h3><div class="bc-read" data-k="br">Read →</div></div>
+      <div class="bc-card"><div class="bc-cat" data-k="b4c">Imaging</div><h3 data-k="b4">Advanced Imaging Management: CT, MRI, and PET-CT Workflow Integration</h3><div class="bc-read" data-k="br">Read →</div></div>
+      <div class="bc-card"><div class="bc-cat" data-k="b5c">Pharmacy</div><h3 data-k="b5">Pharmaceutical Traceability: ATC Coding, Stock Control, and Planning at Scale</h3><div class="bc-read" data-k="br">Read →</div></div>
+      <div class="bc-card"><div class="bc-cat" data-k="b6c">Emergency</div><h3 data-k="b6">Emergency Digitalization: Managing High-Volume Unidentified Patient Flows</h3><div class="bc-read" data-k="br">Read →</div></div>
+      <div class="bc-card"><div class="bc-cat" data-k="b7c">Costing</div><h3 data-k="b7">Hospital Costing: Building Cost-per-Patient, Diagnosis, and Procedure Databases</h3><div class="bc-read" data-k="br">Read →</div></div>
+      <div class="bc-card"><div class="bc-cat" data-k="b8c">ERP</div><h3 data-k="b8">Arkimedo 21 in Practice: Asset Management Across the Municipality of Tirana</h3><div class="bc-read" data-k="br">Read →</div></div>
+      <div class="bc-card"><div class="bc-cat" data-k="b9c">Standards</div><h3 data-k="b9">ICD9 to ICD10: Standardizing Clinical Documentation Across Albanian Hospitals</h3><div class="bc-read" data-k="br">Read →</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ CONTACT ══════════════ -->
+<div id="pg-contact" class="page pw">
+  <div class="ph">
+    <div class="bc"><button onclick="gp('home')" data-k="bh">Home</button><span class="bc-sep"> / </span><span data-k="bco">Contact</span></div>
+    <div class="ph-tag">Contact</div>
+    <h1 data-k="coh1">Let's modernize your <em>institution</em></h1>
+    <p class="ph-p" data-k="cop">Ready to discuss SIIS, SISP, or Arkimedo 21? Our teams in Tirana and Prishtina are available for consultations, demonstrations, and implementation planning.</p>
+  </div>
+  <div class="pb">
+    <div class="co-grid rv">
+      <div class="co-left">
+        <div class="co-box">
+          <div class="co-bt" data-k="co1">Head Office — Tirana, Albania</div>
+          <div class="co-row"><div class="co-lbl">Address</div><div class="co-val">QSU "Nënë Tereza", Rruga e Dibrës, Tirana 1000</div></div>
+          <div class="co-row"><div class="co-lbl">Telephone</div><div class="co-val"><a href="tel:+355692045500">+355 69 204 5500</a></div></div>
+          <div class="co-row"><div class="co-lbl">Email</div><div class="co-val"><a href="mailto:info@oni.al">info@oni.al</a></div></div>
+        </div>
+        <div class="co-box">
+          <div class="co-bt" data-k="co2">Regional Office — Prishtina, Kosovo</div>
+          <div class="co-row"><div class="co-lbl">Address</div><div class="co-val">Rruga Remzi Ademi, Nr. 23, Prishtina</div></div>
+          <div class="co-row"><div class="co-lbl">Telephone</div><div class="co-val"><a href="tel:+37744586717">+377 44 586 7170</a></div></div>
+        </div>
+        <div class="co-box">
+          <div class="co-bt" data-k="co3">Technical Support</div>
+          <div class="co-row"><div class="co-lbl">Gold</div><div class="co-val" style="font-weight:600">24/7 continuous</div></div>
+          <div class="co-row"><div class="co-lbl">Silver</div><div class="co-val" data-k="cosls">Business hours + emergency on-call</div></div>
+          <div class="co-row"><div class="co-lbl">Bronze</div><div class="co-val" data-k="coslb">Standard business hours</div></div>
+        </div>
+      </div>
+      <div class="fw">
+        <h2 data-k="fwt">Request a Demonstration</h2>
+        <p class="fw-s" data-k="fws">We will organize a presentation of SIIS, SISP, or Arkimedo 21 tailored to your institution's profile.</p>
+        <div class="fg-r">
+          <div class="fg"><label data-k="fn">Full Name</label><input type="text" placeholder="Your name"></div>
+          <div class="fg"><label data-k="fi">Institution</label><input type="text" placeholder="Hospital / Organization"></div>
+        </div>
+        <div class="fg-r">
+          <div class="fg"><label data-k="fe">Email</label><input type="email" placeholder="you@institution.al"></div>
+          <div class="fg"><label data-k="fph">Telephone</label><input type="tel" placeholder="+355..."></div>
+        </div>
+        <div class="fg"><label data-k="fpl">Platform</label><select><option data-k="fp0">Select platform...</option><option>SIIS</option><option>SISP</option><option>Arkimedo 21</option><option data-k="fpm">Multiple platforms</option></select></div>
+        <div class="fg"><label data-k="fm">Message</label><textarea placeholder="Describe your institution and requirements..."></textarea></div>
+        <button class="btn-submit" onclick="alert('Thank you. We will contact you within 24 hours.')"><span data-k="fsnd">Submit Request</span> →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft">
+    <div>
+      <img class="fb-logo" src="data:image/jpeg;base64,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" alt="ONI shpk">
+      <p data-k="fd">Albania's leading developer and operator of healthcare information systems. Transforming institutions through integrated, secure, and reliable digital infrastructure since 1994.</p>
+      <div class="fi-row"><span class="fi">ISO 9001</span><span class="fi">ISO 27001</span><span class="fi">ISO 14001</span><span class="fi">OHSAS 18001</span><span class="fi">ISO 55001</span><span class="fi">PAS 99</span><span class="fi">RDA 50</span><span class="fi">RDA 48/3</span></div>
+    </div>
+    <div class="fc"><h4 data-k="fp">Products</h4><button onclick="gp('platforms')">SIIS</button><button onclick="gp('platforms')">SISP</button><button onclick="gp('arkimedo')">Arkimedo 21</button></div>
+    <div class="fc"><h4 data-k="fsrv">Services</h4><button onclick="gp('services')" data-k="fs1">Implementation</button><button onclick="gp('services')" data-k="fs2">Training</button><button onclick="gp('services')" data-k="fs3">24/7 Support</button><button onclick="gp('services')" data-k="fs4">Consulting</button></div>
+    <div class="fc"><h4 data-k="fct">Contact</h4><a href="mailto:info@oni.al">info@oni.al</a><a href="tel:+355692045500">+355 69 204 5500</a><a href="tel:+37744586717">+377 44 586 7170</a></div>
+  </div>
+  <div class="fb-bot"><p>&copy; 2025 ONI shpk. <span data-k="frr">All rights reserved.</span></p><span data-k="fce">RDA 50 &middot; RDA 48/3 &middot; Albania &amp; Kosovo</span></div>
+</footer>
+
+<script>
+const T={en:{"na": "About", "npl": "Platforms", "ncs": "Case Studies", "nte": "Technology", "nsv": "Services", "nar": "Arkimedo 21", "nco": "Contact", "nd": "Request Demo", "hbg": "Healthcare Information Systems — Albania & Kosovo", "hh1": "The digital infrastructure<br>behind <em>Albania's hospitals</em>", "hp": "ONI shpk builds and maintains the core HIS/HMS platforms that power Albania's most complex university hospitals. In operation since 1994. ISO 27001 certified. Critical National Infrastructure.", "hc1": "Request a Demo", "hc2": "Explore Platforms", "hs1": "Years of operation", "hs2": "Active users at QSUT", "hs3": "Requests per minute", "hs4": "University hospitals", "tl": "Live deployments", "ncl": "Navigate", "n01": "01", "n02": "02", "n03": "03", "n04": "04", "n05": "05", "n06": "06", "n07": "07", "n08": "08", "n1t": "SIIS & SISP", "n1s": "HIS/HMS Platforms", "n1d": "Two flagship systems — modular, HL7-based, DRG-oriented.", "n2t": "Case Studies", "n2s": "Verified Impact", "n2d": "Operational data from QSUT, SUT, QSRT. Albania's longest documented hospital informatization history.", "n3t": "Services", "n3s": "End-to-End", "n3d": "Implementation, accredited training, 24/7 support, and custom development.", "n4t": "Arkimedo 21", "n4s": "ERP 360°", "n4d": "Enterprise resource platform for public institutions and municipalities.", "n5t": "Technology", "n5s": "Architecture & Security", "n5d": "HL7, ISO 27001, DRG. Built for critical infrastructure environments.", "n6t": "About ONI", "n6s": "Est. 1994", "n6d": "Founded in Tirana. Albania's only HIS/HMS developer with national IP certification.", "n7t": "Blog & Insights", "n7s": "Knowledge Hub", "n7d": "Practical insights from real deployments at QSUT, SUT, and QSRT.", "n8t": "Contact & Demo", "n8s": "Get in Touch", "n8d": "Offices in Tirana and Prishtina. Request a personalized demonstration.", "bh": "Home", "ba": "About", "bpl": "Platforms", "bcs": "Case Studies", "bte": "Technology", "bsv": "Services", "bbl": "Insights", "bco": "Contact", "pat": "Company", "pah1": "Three decades of <em>healthcare innovation</em>", "pap": "Albania's only company to have built, deployed, and maintained large-scale HIS/HMS platforms across university and regional hospitals.", "awht": "Who We Are", "awhp": "ONI shpk is an Albanian technology company established in 1994, specializing in Healthcare Information Systems, enterprise ERP solutions, and digital transformation for public institutions. Our platforms SIIS and SISP are the only Albanian-developed HIS/HMS solutions certified with national intellectual property rights (RDA 50, RDA 48/3) — deployed in the country's most critical healthcare environments.", "awhp2": "We operate across Albania and Kosovo, providing mission-critical digital infrastructure, 24/7 technical maintenance, and continuous system development to university hospitals, regional hospitals, private clinics, and primary care networks.", "as1": "Years of continuous operation", "as2": "Hospitals fully digitized", "acert": "Certifications & Intellectual Property Rights", "aipt": "Made in Albania", "aipp": "SIIS and SISP are certified with national IP rights (RDA 50) and exclusive usage rights (RDA 48/3) — the only HIS/HMS platforms of this scale developed and owned by an Albanian company.", "avt": "Core Values", "v1t": "Security First", "v1p": "ISO 27001 certified. SISP classified as Critical Information Infrastructure by government decree VKM 553/2020. Systems that held firm during Albania's 2022 national cyberattack.", "v2t": "Always On", "v2p": "Continuous 24/7 uptime across Albania's most demanding clinical environments. Peak throughput of 1,800 requests per minute at QSUT.", "v3t": "Long-term Partnership", "v3p": "We maintain systems beyond contractual obligations. Mission-critical infrastructure requires unconditional commitment, not transactional service.", "v4t": "Continuous Innovation", "v4p": "ICD10 transition, laboratory automation, electronic prescriptions, DRG costing — all delivered iteratively across live hospital environments.", "v5t": "Transparency", "v5p": "Every system we build produces verifiable data. DRG-oriented architectures enable accurate cost-per-patient reporting and standardized financial disclosure.", "v6t": "Proven Reliability", "v6p": "Thirty years of institutional trust across Albania's most complex public health environments. Systems that clinicians depend on daily without compromise.", "atlt": "Company Timeline", "t1t": "1994 — ONI shpk Founded", "t1d": "Established in Tirana, Albania as a technology company focused on healthcare IT and public sector digital infrastructure.", "t2t": "2007–2010 — Regional Deployments", "t2d": "Shkodra Regional Hospital: the first electronic medical record system in a public Albanian hospital. Fier and Vlora regional deployments follow.", "t3t": "2011 — SISP at QSUT", "t3d": "Albania's largest hospital — QSUT 'Mother Teresa' — fully powered by SISP. Classified as Critical Information Infrastructure by government decree.", "t4t": "2018–2025 — SIIS at University Trauma Hospital", "t4d": "Complete clinical and financial digitization of SUT. DRG costing, pharmaceutical traceability, automated laboratory and imaging workflows.", "t5t": "2019–2025 — QSRT Transformation", "t5d": "SIIS deployment and deep institutional transformation at QSRT 'Shefqet Ndroqi'. Integration of Kavaja Hospital (2025). Upgraded to Regional & University status.", "t6t": "2020–2025 — Arkimedo 21, Municipality of Tirana", "t6d": "ERP platform deployed across all municipal educational institutions: schools, kindergartens, nurseries, dormitories, and administrative units.", "t7t": "2023–2025 — ICD10, Lab Automation & E-Prescription", "t7d": "ICD10 transition across all hospitals, SISP-LAB full automation, and electronic hospital prescription for Oncology & Hematology.", "plh1": "Built for <em>every scale</em>", "plp": "Two distinct platforms covering Albania's full range of hospital complexity — from 200-bed regional centers to the country's largest tertiary care institution.", "sif": "For hospitals up to 200 beds", "sifu": "Integrated Healthcare Information System", "sid": "A modular, HL7-based HIS built for regional hospitals and specialized centers. Real-time clinical, administrative, and financial workflows with complete DRG orientation and ICD10 coding standards.", "sift": "Capabilities", "sf1": "EMR/EHR, Ambulatory, Emergency & Inpatient management", "sf2": "Pharmacy with ATC coding, Laboratory (SIIS-LAB), Imaging", "sf3": "DRG-oriented costing engine — cost per patient, diagnosis, procedure", "sf4": "Full integration with LIS, RIS, PACS", "sf5": "ICD10 + OPS-ICD-v3 clinical coding", "siit": "Implementations", "simt": "Modules", "spf": "For hospitals above 200 beds", "spfu": "Public Health Information System", "spd": "Albania's most advanced HIS, continuously powering QSUT since 2011. The first DRG-oriented database in the country. Classified as Critical Information Infrastructure under VKM 553/2020.", "sp1": "600+ active users, 300+ workstations across QSUT", "sp2": "SISP-LAB: fully automated laboratory workflows (2024)", "sp3": "Electronic hospital prescription — Oncology & Hematology (2025)", "sp4": "100+ custom reports; SISP-PHARMACY with 54 dedicated reports", "sp5": "Integrations: LIS, RIS, PACS, PIS, DPGJC, e-Referral", "spit": "Implementation", "spqs": "QSUT 'Mother Teresa' — Albania's largest hospital — continuously since 2011", "spmt": "Modules", "mods_siis": "EMR/EHR · Emergency · Inpatient · Pharmacy · Laboratory · Imaging · DRG · Ambulatory · Finance", "mods_sisp": "SISP-LAB · SISP-IMG · SISP-PIS · SISP-AMB · Inpatient · Emergency · Costing · Oncology · Reports", "csh1": "<em>Verified</em> impact at scale", "csp": "Albania's longest continuous history of hospital informatization. All operational data verified from 2025 institutional reports.", "csft": "Featured — Largest Deployment", "qt": "University Hospital Center \"Mother Teresa\" (QSUT)", "ql": "Tirana, Albania — Critical Information Infrastructure since 2011", "qi1": "First DRG-oriented database in Albania", "qi2": "SISP-LAB automation (2024)", "qi3": "Electronic prescription — Oncology (2025)", "qi4": "100+ custom reports", "qs1": "Ambulatory patients (2025)", "qs2": "Total cases", "qs3": "Services — highest decade growth", "qs4": "Emergency patients without ID", "qs5": "ALL pharmaceutical circulation (2016–2025)", "qs6": "Ambulatory structures monitored", "csot": "Further Implementations", "sutn": "University Trauma Hospital (SUT)", "sutl": "Tirana · SIIS · 2018–2025", "ss1": "Hospital admissions (86% emergency)", "ss2": "Surgical interventions", "ss3": "Laboratory analyses", "ss4": "ALL total institutional cost", "si1": "Standardized EMR", "si2": "DRG costing engine", "si3": "ATC pharmaceutical traceability", "rtn": "QSRT \"Shefqet Ndroqi\"", "rtl": "Tirana · SIIS · 2019–2025", "rs1": "Total services", "rs2": "Surgical interventions", "rs3": "Imaging examinations", "rs4": "ALL pharmaceutical circulation", "ri1": "Upgraded to University & Regional status (2025)", "ri2": "Kavaja Hospital integration (2025)", "otn": "Regional Hospitals & Kosovo", "otl": "Shkodra · Fier · Vlora · 18 Kosovo primary care centers", "os1": "Beds — Shkodra (Albania's first public hospital EMR, 2007)", "os2": "Beds — Fier Regional Hospital", "os3": "Beds — Vlora Regional Hospital", "os4": "Kosovo primary care centers (Gjakova region)", "teh1": "Built for <em>critical environments</em>", "tep": "HL7-based modular architecture delivering real-time clinical operations, ISO 27001 information security, and full integration with Albania's national health and government data systems.", "tc1": "Architecture", "ta1": "HL7-based protocol for standardized clinical data exchange", "ta2": "Fully modular: EMR, EHR, PMS, LIS, RIS, PACS, DRG", "ta3": "Real-time workflows with granular role-based access control", "ta4": "High-load performance — 1,800 requests/minute sustained (QSUT)", "ta5": "ICD10 and OPS-ICD-v3 clinical coding standards", "tc2": "Security & Compliance", "ts1": "ISO 27001:2013 — Information Security Management System", "ts2": "Critical Information Infrastructure designation (VKM 553/2020)", "ts3": "Full audit trails and end-to-end encrypted communications", "ts4": "Automated backup systems and disaster recovery protocols", "ts5": "Operational integrity maintained during Albania's 2022 national cyberattack", "tsb": "Systems held uncompromised during the 2022 national cyberattack", "tc3": "Integrations", "ti1": "LIS, RIS, PACS — full clinical imaging and laboratory data exchange", "ti2": "DPGJC — national patient identity verification system", "ti3": "e-Referral — national referral and consultation network", "ti4": "AKSHI-compliant government data exchange standards", "tc4": "Clinical Standards", "tcl1": "ICD10 clinical coding — transition completed across all deployments (2023)", "tcl2": "OPS-ICD-v3 surgical and procedure coding", "tcl3": "DRG-oriented financial architecture for FSDKSH reporting", "tcl4": "ATC pharmaceutical classification, dispensing, and traceability", "svh1": "Full-cycle support, <em>end to end</em>", "svp": "From needs analysis and data migration through deployment, accredited training, and continuous 24/7 technical support — ONI covers the complete institutional lifecycle.", "sv1t": "Implementation & Data Migration", "sv1p": "Clinical workflow analysis, system configuration, historical data migration with ICD10 and OPS standardization, and modular deployment structured to each institution's specific operational profile.", "sv2t": "Training & Accreditation", "sv2p": "ASCKSH-accredited training programs for clinicians, nurses, pharmacists, laboratory technicians, and administrative personnel. Delivered on-site and remotely with documentation, video guides, and role-specific certification.", "sv3t": "24/7 Technical Support", "sv3p": "Three support tiers: Gold (continuous 24/7), Silver (business hours + emergency response), Bronze (standard business hours). Remote and on-site intervention, server monitoring, and backup & recovery management.", "sv4t": "Custom Development", "sv4p": "Purpose-built modules, bespoke reporting (100+ custom reports at QSUT), system-to-system integrations, and workflow automation. Recent deliveries: hospital e-prescription (2025), SISP-LAB automation (2024), ICD10 transition (2023).", "sv5t": "DRG & Digital Transformation Consulting", "sv5p": "Institutional digital transformation strategy, DRG costing methodology, clinical documentation standardization, FSDKSH financial reporting architecture, and hospital workflow redesign.", "sv6t": "Infrastructure & Database Management", "sv6p": "Hospital network design and installation, server infrastructure, data center solutions, security hardening, and database administration across Oracle, Microsoft SQL Server, and MySQL environments.", "sls": "Business hours + emergency on-call", "slb": "Standard business hours", "arh1": "Enterprise Resource Planning<br>for <em>public institutions</em>", "arp": "Arkimedo 21 unifies asset management, logistics, finance, HR, GIS/BIM, and energy monitoring in a single web-based platform — fully traceable, real-time, and configured to the Albanian institutional and regulatory context.", "arft": "Deployed Capabilities", "af1t": "Barcode-verified interventions", "af1d": "Every technical intervention carries a unique barcode. Completion is verified within the system before the intervention is closed.", "af2t": "Smart notification system", "af2d": "Real-time alerts via WhatsApp and system notifications for defects, in-progress interventions, and operational status changes.", "af3t": "HVAC monitoring", "af3d": "Live monitoring of heating and cooling infrastructure across all buildings managed by the Municipality of Tirana.", "af4t": "HIS integration", "af4d": "Seamless data bridge between Arkimedo 21 and SIIS/SISP platforms for unified asset and pharmaceutical logistics.", "arit": "Active Deployments", "ai1t": "Municipality of Tirana", "ai1d": "All educational institutions under municipal administration: schools, kindergartens, nurseries, student dormitories, and administrative units. Full asset inventory, maintenance scheduling, and HVAC monitoring.", "ai2t": "QSRT \"Shefqet Ndroqi\"", "ai2d": "HR module covering staff management, leave administration, shift scheduling, and performance tracking.", "armt": "Platform Modules", "am": "Asset Inventory · Maintenance & Lifecycle · Logistics & Warehouse · Economics & Budget · Energy & Environment · GIS & BIM Mapping · Human Resources · Smart Notifications", "blh1": "Insights from <em>the frontline</em>", "blp": "Practical knowledge built from real deployments in Albania's most complex clinical environments — QSUT, SUT, and QSRT.", "b1c": "Digital Transformation", "b1": "Hospital Digital Transformation: The SIIS & SISP Journey (2010–2025)", "b2c": "DRG & Costing", "b2": "DRG in Practice: From Theory to Operational Reporting in Albanian Hospitals", "b3c": "Laboratory", "b3": "Laboratory Automation: How SISP-LAB & SIIS-LAB Eliminated Manual Errors", "b4c": "Imaging", "b4": "Advanced Imaging Management: CT, MRI, and PET-CT Workflow Integration", "b5c": "Pharmacy", "b5": "Pharmaceutical Traceability: ATC Coding, Stock Control, and Planning at Scale", "b6c": "Emergency", "b6": "Emergency Digitalization: Managing High-Volume Unidentified Patient Flows", "b7c": "Costing", "b7": "Hospital Costing: Building Cost-per-Patient, Diagnosis, and Procedure Databases", "b8c": "ERP", "b8": "Arkimedo 21 in Practice: Asset Management Across the Municipality of Tirana", "b9c": "Standards", "b9": "ICD9 to ICD10: Standardizing Clinical Documentation Across Albanian Hospitals", "br": "Read", "coh1": "Let's modernize your <em>institution</em>", "cop": "Ready to discuss SIIS, SISP, or Arkimedo 21? Our teams in Tirana and Prishtina are available for consultations, demonstrations, and implementation planning.", "co1": "Head Office — Tirana, Albania", "co2": "Regional Office — Prishtina, Kosovo", "co3": "Technical Support", "cosls": "Business hours + emergency", "coslb": "Standard business hours", "fwt": "Request a Demonstration", "fws": "We will organize a presentation of SIIS, SISP, or Arkimedo 21 tailored to your institution's profile.", "fn": "Full Name", "fi": "Institution", "fe": "Email", "fph": "Telephone", "fpl": "Platform", "fp0": "Select platform...", "fpm": "Multiple platforms", "fm": "Message", "fsnd": "Submit Request", "fd": "Albania's leading developer and operator of healthcare information systems. Transforming institutions through integrated, secure, and reliable digital infrastructure since 1994.", "fp": "Products", "fsrv": "Services", "fs1": "Implementation", "fs2": "Training", "fs3": "24/7 Support", "fs4": "Consulting", "fct": "Contact", "frr": "All rights reserved.", "fce": "RDA 50 · RDA 48/3 · Albania & Kosovo"},sq:{"na": "Rreth Nesh", "npl": "Platformat", "ncs": "Implementimet", "nte": "Teknologjia", "nsv": "Shërbimet", "nar": "Arkimedo 21", "nco": "Kontakt", "nd": "Kërko Demo", "hbg": "Sisteme Informacioni Shëndetësor — Shqipëri & Kosovë", "hh1": "Infrastruktura dixhitale<br>e <em>spitaleve shqiptare</em>", "hp": "ONI shpk ndërton dhe mirëmban platformat kryesore HIS/HMS që fuqizojnë spitalet universitare më komplekse të Shqipërisë. Në operacion që nga viti 1994. Certifikuar ISO 27001. Infrastrukturë Kritike Kombëtare.", "hc1": "Kërko Demo", "hc2": "Eksploro Platformat", "hs1": "Vite operacioni", "hs2": "Përdorues aktivë QSUT", "hs3": "Kërkesa per minutë", "hs4": "Spitale universitare", "tl": "Implementime aktive", "ncl": "Navigo", "n01": "01", "n02": "02", "n03": "03", "n04": "04", "n05": "05", "n06": "06", "n07": "07", "n08": "08", "n1t": "SIIS & SISP", "n1s": "Platformat HIS/HMS", "n1d": "Dy sisteme kryesore — modulare, HL7-based, DRG-oriented.", "n2t": "Implementimet", "n2s": "Impakt i Verifikuar", "n2d": "Të dhëna operative nga QSUT, SUT, QSRT. Historia më e gjatë e dokumentuar.", "n3t": "Shërbimet", "n3s": "Nga Fillimi deri në Fund", "n3d": "Implementim, trajnime të akredituara, mbështetje 24/7 dhe zhvillim të personalizuar.", "n4t": "Arkimedo 21", "n4s": "ERP 360°", "n4d": "Platformë enterprise për institucione publike dhe bashki.", "n5t": "Teknologjia", "n5s": "Arkitektura & Siguria", "n5d": "HL7, ISO 27001, DRG. Projektuar për mjedise të infrastrukturës kritike.", "n6t": "Rreth ONI", "n6s": "Est. 1994", "n6d": "Themeluar në Tiranë. I vetmi zhvillues shqiptar HIS/HMS me certifikim kombëtar IP.", "n7t": "Blog & Njohuri", "n7s": "Qendra e Njohurive", "n7d": "Njohuri praktike nga implementimet reale në QSUT, SUT dhe QSRT.", "n8t": "Kontakt & Demo", "n8s": "Na Kontaktoni", "n8d": "Zyra në Tiranë dhe Prishtinë. Kërko demonstrim të personalizuar.", "bh": "Ballina", "ba": "Rreth Nesh", "bpl": "Platformat", "bcs": "Implementimet", "bte": "Teknologjia", "bsv": "Shërbimet", "bbl": "Njohuri", "bco": "Kontakt", "pat": "Kompania", "pah1": "Tri dekada <em>inovacioni shëndetësor</em>", "pap": "Kompania e vetme shqiptare që ka ndërtuar, implementuar dhe mirëmbajtur platforma HIS/HMS në spitale universitare dhe rajonale.", "awht": "Kush Jemi", "awhp": "ONI shpk është kompani shqiptare e teknologjisë themeluar në 1994, e specializuar në Sisteme Informacioni Shëndetësor, ERP dhe transformim digjital për institucione publike. Platformat SIIS dhe SISP janë të vetmet zgjidhje HIS/HMS shqiptare të certifikuara me të drejta pronësie intelektuale kombëtare (RDA 50, RDA 48/3).", "awhp2": "Operojmë në Shqipëri dhe Kosovë, duke ofruar infrastrukturë kritike dixhitale, mirëmbajtje teknike 24/7 dhe zhvillim të vazhdueshëm sistemesh.", "as1": "Vite operacioni të vazhdueshëm", "as2": "Spitale të dixhitalizuara plotësisht", "acert": "Certifikimet & Të Drejtat e Pronësisë Intelektuale", "aipt": "Made in Albania", "aipp": "SIIS dhe SISP janë të certifikuara me të drejta autori kombëtare (RDA 50) dhe ekskluzivitet (RDA 48/3) — të vetmet platforma HIS/HMS të zhvilluara nga një kompani shqiptare.", "avt": "Vlerat Tona", "v1t": "Siguria e Para", "v1p": "ISO 27001 e certifikuar. SISP i klasifikuar si Infrastrukturë Kritike me dekret qeveritar VKM 553/2020. Sistemet qëndruan të paprekura gjatë sulmit kibernetik kombëtar të vitit 2022.", "v2t": "Gjithmonë Aktiv", "v2p": "Operativitet i vazhdueshëm 24/7 në mjediset klinike më kërkuese. Kulm i proçesimit: 1,800 kërkesa për minutë në QSUT.", "v3t": "Partneritet Afatgjatë", "v3p": "Mbajmë sistemet edhe jashtë detyrimeve kontraktore. Infrastruktura kritike kërkon angazhim të pakushtëzuar.", "v4t": "Inovacion i Vazhdueshëm", "v4p": "Kalim ICD10, automatizim laboratori, receta elektronike, kostifikim DRG — të dorëzuara nëpërmjet iteracioneve në mjedise spitalore aktive.", "v5t": "Transparencë", "v5p": "Çdo sistem që ndërtojmë prodhon të dhëna të verifikueshme. Arkitekturat DRG mundësojnë raportim të saktë financiar dhe transparencë institucionale.", "v6t": "Besueshmëri e Provuar", "v6p": "Tridhjetë vjet besimi institucional në mjediset shëndetësore publike më komplekse të Shqipërisë.", "atlt": "Kronologjia e Kompanisë", "t1t": "1994 — Themelimi i ONI shpk", "t1d": "Themeluar në Tiranë si kompani teknologjike me fokus në IT shëndetësor dhe infrastrukturë dixhitale të sektorit publik.", "t2t": "2007–2010 — Implementimet e Para Rajonale", "t2d": "Spitali Rajonal Shkodër: sistemi i parë i dosjeve elektronike mjekësore në një spital publik shqiptar. Implementimet e Fierit dhe Vlorës pasojnë.", "t3t": "2011 — SISP në QSUT", "t3d": "Spitali më i madh i vendit — QSUT 'Nënë Tereza' — fuqizohet plotësisht nga SISP. Klasifikuar si Infrastrukturë Kritike me dekret qeveritar.", "t4t": "2018–2025 — SIIS në Spitalin Universitar të Traumës", "t4d": "Dixhitalizim i plotë klinik dhe financiar i SUT. Kostifikim DRG, gjurmueshmëri farmaceutike, automatizim laboratori dhe imazherie.", "t5t": "2019–2025 — Transformimi i QSRT", "t5d": "Implementim SIIS dhe transformim i thellë institucional i QSRT 'Shefqet Ndroqi'. Integrim i Spitalit të Kavajës (2025). U ngrit si Qendër Rajonale & Universitare.", "t6t": "2020–2025 — Arkimedo 21, Bashkia Tiranë", "t6d": "Platformë ERP e implementuar në të gjitha institucionet arsimore komunale: shkolla, kopshte, çerdhe, konvikte dhe njësi administrative.", "t7t": "2023–2025 — ICD10, Automatizim Laboratori & Recetë Elektronike", "t7d": "Kalim ICD10 në të gjitha spitalet, automatizim i plotë SISP-LAB dhe recetë elektronike spitalore për Onkologji & Hematologji.", "plh1": "Ndërtuar për <em>çdo shkallë</em>", "plp": "Dy platforma të ndryshme që mbulojnë të gjithë spektrin e kompleksitetit spitalor shqiptar.", "sif": "Për struktura deri në 200 shtretër", "sifu": "Sistemi Informativ i Integruar për Shëndetësinë", "sid": "Platformë HIS modulare, HL7-based, ndërtuar për spitale rajonale dhe qendra të specializuara. Flukse pune klinike, administrative dhe financiare në kohë reale me orientim të plotë DRG.", "sift": "Aftësitë", "sf1": "EMR/EHR, Ambulator, Urgjencë & menaxhim Spitalor", "sf2": "Farmaci me kodifikim ATC, Laborator (SIIS-LAB), Imazheri", "sf3": "Motor kostifikimi DRG — kosto per pacient, diagnozë, procedurë", "sf4": "Integrim i plotë me LIS, RIS, PACS", "sf5": "Kodifikim klinik ICD10 + OPS-ICD-v3", "siit": "Implementime", "simt": "Modulet", "spf": "Për struktura mbi 200 shtretër", "spfu": "Sistemi i Informacionit për Shëndetin Publik", "spd": "Platforma HIS më e avancuar në Shqipëri, që fuqizon QSUT vazhdimisht që nga viti 2011. Databaza e parë DRG-oriented në vend. Infrastrukturë Kritike sipas VKM 553/2020.", "sp1": "600+ përdorues aktivë, 300+ poste pune në QSUT", "sp2": "SISP-LAB: automatizim i plotë i laboratorit (2024)", "sp3": "Recetë elektronike spitalore — Onkologji & Hematologji (2025)", "sp4": "100+ raporte të personalizuara; SISP-FARMACI me 54 raporte dedikuar", "sp5": "Integrime: LIS, RIS, PACS, PIS, DPGJC, e-Referral", "spit": "Implementimi", "spqs": "QSUT 'Nënë Tereza' — spitali më i madh i vendit — vazhdimisht që nga 2011", "spmt": "Modulet", "mods_siis": "EMR/EHR · Urgjencë · Spitalor · Farmaci · Laborator · Imazheri · DRG · Ambulator · Financa", "mods_sisp": "SISP-LAB · SISP-IMG · SISP-PIS · SISP-AMB · Spitalor · Urgjencë · Kostifikimi · Onkologjia · Raportet", "csh1": "Impakt i <em>verifikuar</em> në shkallë", "csp": "Historia më e gjatë e vazhdueshme e informatizimit spitalor në Shqipëri. Të gjitha të dhënat operative të verifikuara nga raportet institucionale të vitit 2025.", "csft": "Implementimi Kryesor — Shkallë Maksimale", "qt": "Qendra Spitalore Universitare \"Nënë Tereza\" (QSUT)", "ql": "Tiranë, Shqipëri — Infrastrukturë Kritike Informacioni që nga viti 2011", "qi1": "Databaza e parë DRG-oriented në Shqipëri", "qi2": "Automatizim SISP-LAB (2024)", "qi3": "Recetë elektronike — Onkologji (2025)", "qi4": "100+ raporte të personalizuara", "qs1": "Pacientë ambulatorë (2025)", "qs2": "Raste totale", "qs3": "Shërbime — rritja më e madhe e dekadës", "qs4": "Pacientë urgjencë pa identifikim", "qs5": "Lekë farmaci (2016–2025)", "qs6": "Struktura ambulatore të monitoruara", "csot": "Implementime të Mëtejshme", "sutn": "Spitali Universitar i Traumës (SUT)", "sutl": "Tiranë · SIIS · 2018–2025", "ss1": "Shtime spitalore (86% raste urgjente)", "ss2": "Ndërhyrje kirurgjikale", "ss3": "Analiza laboratorike", "ss4": "Lekë kosto totale institucionale", "si1": "EMR e standardizuar", "si2": "Motor kostifikimi DRG", "si3": "Gjurmueshmëri farmaceutike ATC", "rtn": "QSRT \"Shefqet Ndroqi\"", "rtl": "Tiranë · SIIS · 2019–2025", "rs1": "Shërbime totale", "rs2": "Ndërhyrje kirurgjikale", "rs3": "Ekzaminime imazherike", "rs4": "Lekë farmaci", "ri1": "U ngrit si Qendër Universitare & Rajonale (2025)", "ri2": "Integrim i Spitalit të Kavajës (2025)", "otn": "Spitale Rajonale & Kosovë", "otl": "Shkodër · Fier · Vlorë · 18 qendra kujdesi parësor Kosovë", "os1": "Shtretër — Shkodra (EMR i parë spital publik shqiptar, 2007)", "os2": "Shtretër — Spitali Rajonal Fier", "os3": "Shtretër — Spitali Rajonal Vlorë", "os4": "Qendra kujdesi parësor Kosovë (rajoni Gjakovë)", "teh1": "Ndërtuar për <em>mjedise kritike</em>", "tep": "Arkitekturë modulare HL7-based që ofron operacione klinike në kohë reale, siguri informacioni ISO 27001 dhe integrim të plotë me sistemet shëndetësore dhe qeveritare kombëtare.", "tc1": "Arkitektura", "ta1": "Protokoll HL7 për shkëmbim të standardizuar të të dhënave klinike", "ta2": "Plotësisht modular: EMR, EHR, PMS, LIS, RIS, PACS, DRG", "ta3": "Flukse pune në kohë reale me kontroll aksesi granular sipas roleve", "ta4": "Performancë nën ngarkesë të lartë — 1,800 kërkesa/minutë (QSUT)", "ta5": "Standardet e kodifikimit klinik ICD10 dhe OPS-ICD-v3", "tc2": "Siguria & Pajtueshmëria", "ts1": "ISO 27001:2013 — Sistemi i Menaxhimit të Sigurisë së Informacionit", "ts2": "Infrastrukturë Kritike Informacioni (VKM 553/2020)", "ts3": "Gjurmë të plota auditimi dhe komunikim i enkriptuar fund-to-fund", "ts4": "Sisteme automatike backup dhe protokolle disaster recovery", "ts5": "Integriteti operacional i mbajtur gjatë sulmit kibernetik kombëtar 2022", "tsb": "Sistemet u mbajtën të paprekura gjatë sulmit kibernetik kombëtar 2022", "tc3": "Integrimet", "ti1": "LIS, RIS, PACS — shkëmbim i plotë klinik i të dhënave laboratorike dhe imazherike", "ti2": "DPGJC — verifikimi kombëtar i identitetit të pacientit", "ti3": "e-Referral — rrjeti kombëtar i referimit dhe konsultimit", "ti4": "Shkëmbim të dhënash qeveritar në përputhje me standardet AKSHI", "tc4": "Standardet Klinike", "tcl1": "Kodifikim klinik ICD10 — kalim i realizuar në të gjitha implementimet (2023)", "tcl2": "Kodifikim kirurgjikal dhe procedural OPS-ICD-v3", "tcl3": "Arkitekturë financiare DRG-oriented për raportim FSDKSH", "tcl4": "Klasifikim farmaceutik ATC, dispensim dhe gjurmueshmëri", "svh1": "Mbështetje e plotë cikli, <em>nga fillimi deri në fund</em>", "svp": "Nga analiza e nevojave dhe migrimi i të dhënave deri te implementimi, trajnimet e akredituara dhe mbështetja teknike e vazhdueshme 24/7.", "sv1t": "Implementim & Migrim Të Dhënash", "sv1p": "Analizë fluksesh klinike, konfigurim sistemi, migrim të dhënash historike me standardizim ICD10 dhe OPS, dhe implementim modular i strukturuar sipas profileit specifik operacional të çdo institucioni.", "sv2t": "Trajnime & Akreditim", "sv2p": "Programe trajnimi të akredituara nga ASCKSH për mjekë, infermierë, farmacistë, teknikë laboratorikë dhe personel administrativ. Të dorëzuara në vend dhe online me dokumentacion dhe certifikim.", "sv3t": "Mbështetje Teknike 24/7", "sv3p": "Tre nivele mbështetjeje: Gold (24/7 i vazhdueshëm), Silver (orar zyrtar + reagim urgjent), Bronze (orë standarde zyrtare). Ndërhyrje remote dhe në vend, monitorim serverësh, backup dhe recovery.", "sv4t": "Zhvillim i Personalizuar", "sv4p": "Module me qëllim të posaçëm, raporte të personalizuara (100+ në QSUT), integrime sistem-me-sistem dhe automatizim fluksesh. Dorëzime të fundit: recetë elektronike (2025), SISP-LAB (2024), ICD10 (2023).", "sv5t": "Konsulencë DRG & Transformim Digjital", "sv5p": "Strategji transformimi digjital institucional, metodologji kostifikimi DRG, standardizim dokumentimi klinik, arkitekturë raportimi FSDKSH dhe rimodelim fluksesh spitalore.", "sv6t": "Infrastrukturë & Menaxhim Databazash", "sv6p": "Projektim dhe instalim rrjetesh spitalore, infrastrukturë serverësh, zgjidhje data center, hardening siguri dhe administrim databazash: Oracle, Microsoft SQL Server dhe MySQL.", "sls": "Orar zyrtar + reagim urgjent", "slb": "Orë standarde zyrtare", "arh1": "Planifikim Burimesh Njerëzore<br>për <em>institucione publike</em>", "arp": "Arkimedo 21 unifikon menaxhimin e aseteve, logjistikën, financat, HR, GIS/BIM dhe monitorimin e energjisë në një platformë të vetme web — plotësisht e gjurmueshme, në kohë reale dhe e konfiguruar sipas kontekstit institucional dhe rregullator shqiptar.", "arft": "Aftësi të Implementuara", "af1t": "Ndërhyrje të verifikuara me barkod", "af1d": "Çdo ndërhyrje teknike mban një barkod unik. Realizimi verifikohet brenda sistemit para mbylljes së ndërhyrjes.", "af2t": "Sistem njoftimesh smart", "af2d": "Alarme në kohë reale nëpërmjet WhatsApp dhe sistemit për defekte, ndërhyrje në kurs dhe ndryshime të statusit operacional.", "af3t": "Monitorim HVAC", "af3d": "Monitorim i drejtpërdrejtë i infrastrukturës ngrohje-ftohje në të gjitha objektet e administruara nga Bashkia Tiranë.", "af4t": "Integrim me HIS", "af4d": "Urë të dhënash e padukshme ndërmjet Arkimedo 21 dhe platformave SIIS/SISP për logjistikë të unifikuar asetesh dhe farmaceutike.", "arit": "Implementime Aktive", "ai1t": "Bashkia Tiranë", "ai1d": "Të gjitha institucionet arsimore nën administrimin bashkiak: shkolla, kopshte, çerdhe, konvikte studentore dhe njësi administrative. Inventar i plotë asetesh, planifikim mirëmbajtjeje dhe monitorim HVAC.", "ai2t": "QSRT \"Shefqet Ndroqi\"", "ai2d": "Moduli HR që mbulon menaxhimin e stafit, administrimin e lejeve, planifikimin e turneve dhe gjurmimin e performancës.", "armt": "Modulet e Platformës", "am": "Inventar Asetesh · Mirëmbajtje & Cikël Jete · Logjistikë & Magazinë · Ekonomi & Buxhet · Energji & Mjedis · Harta GIS & BIM · Burime Njerëzore · Njoftime Smart", "blh1": "Njohuri nga <em>vija e parë</em>", "blp": "Njohuri praktike të ndërtuara nga implementimet reale në mjediset klinike më komplekse të Shqipërisë — QSUT, SUT dhe QSRT.", "b1c": "Transformim Digjital", "b1": "Transformimi Digjital Spitalor: Rruga e SIIS & SISP (2010–2025)", "b2c": "DRG & Kostifikimi", "b2": "DRG në Praktikë: Nga Teoria te Raportimi Operacional", "b3c": "Laboratori", "b3": "Automatizimi Laboratorik: Eliminimi i Gabimeve Manuale me SISP-LAB & SIIS-LAB", "b4c": "Imazheria", "b4": "Menaxhimi i Avancuar i Imazherisë: Integrimi i Flukseve CT, MRI dhe PET-CT", "b5c": "Farmacia", "b5": "Gjurmueshmëria Farmaceutike: Kodifikim ATC, Kontroll Stoku dhe Planifikim", "b6c": "Urgjenca", "b6": "Dixhitalizimi i Urgjencës: Menaxhimi i Flukseve me Volum të Lartë pa Identifikim", "b7c": "Kostifikimi", "b7": "Kostifikimi Spitalor: Ndërtimi i Databazave Kosto-per-Pacient, Diagnozë dhe Procedurë", "b8c": "ERP", "b8": "Arkimedo 21 në Praktikë: Menaxhimi i Aseteve nëpër Bashkinë Tiranë", "b9c": "Standardet", "b9": "Nga ICD9 te ICD10: Standardizimi i Dokumentimit Klinik nëpër Spitalet Shqiptare", "br": "Lexo", "coh1": "Le ta modernizojmë <em>institucionin tuaj</em>", "cop": "Gati të diskutoni SIIS, SISP ose Arkimedo 21? Ekipet tona në Tiranë dhe Prishtinë janë të disponueshme për konsultime, demonstrime dhe planifikim implementimi.", "co1": "Zyra Qendrore — Tiranë, Shqipëri", "co2": "Zyra Rajonale — Prishtinë, Kosovë", "co3": "Mbështetje Teknike", "cosls": "Orar zyrtar + emergjencë", "coslb": "Orë standarde zyrtare", "fwt": "Kërko Demonstrim", "fws": "Do organizojmë një prezantim të SIIS, SISP ose Arkimedo 21 të përshtatur sipas profilit të institucionit tuaj.", "fn": "Emri & Mbiemri", "fi": "Institucioni", "fe": "Email", "fph": "Telefon", "fpl": "Platforma", "fp0": "Zgjidh platformën...", "fpm": "Platforma të shumta", "fm": "Mesazhi", "fsnd": "Dërgo Kërkesën", "fd": "Zhvilluesi dhe operatori kryesor shqiptar i sistemeve të informacionit shëndetësor. Duke transformuar institucione nëpërmjet infrastrukturës dixhitale të integruar, të sigurt dhe të besueshme që nga viti 1994.", "fp": "Produktet", "fsrv": "Shërbimet", "fs1": "Implementim", "fs2": "Trajnime", "fs3": "Mbështetje 24/7", "fs4": "Konsulencë", "fct": "Kontakt", "frr": "Të gjitha të drejtat e rezervuara.", "fce": "RDA 50 · RDA 48/3 · Shqipëri & Kosovë"}};
+let L=localStorage.getItem('oni_lang')||'en',CP='home';
+function gp(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pg-'+id).classList.add('active');
+  document.querySelectorAll('.nl').forEach(b=>b.classList.remove('cur'));
+  const nb=document.querySelector(`.nl[onclick*="'${id}'"]`);if(nb)nb.classList.add('cur');
+  CP=id;window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(()=>document.querySelectorAll('#pg-'+id+' .rv').forEach(el=>obs.observe(el)),60);
+}
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target)}}),{threshold:0.04});
+function setL(l){
+  L=l;localStorage.setItem('oni_lang',l);
+  document.querySelectorAll('.lb').forEach(b=>b.classList.toggle('on',b.textContent.trim().toLowerCase()===l));
+  document.querySelectorAll('[data-k]').forEach(el=>{const v=T[l][el.dataset.k];if(v!==undefined)el.innerHTML=v});
+}
+function tm(){document.getElementById('mnav').classList.toggle('open')}
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('solid',scrollY>8));
+setL(L);
+setTimeout(()=>document.querySelectorAll('#pg-home .rv').forEach(el=>obs.observe(el)),100);
+</script>
+</body>
+</html>
